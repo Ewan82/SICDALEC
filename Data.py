@@ -2,6 +2,7 @@ import numpy as np
 f=open("dalec_drivers.txt","r")
 allLines=f.readlines()
 lenrun=1095
+
 class dalecData( ): 
 
   def __init__(self):
@@ -34,7 +35,7 @@ class dalecData( ):
             elif allVars[i]=='lf':
                 self.lf[n]=float(allVars[i+1])
                 self.lf_err[n]=float(allVars[i+2])
-	    elif allVars[i]=='lw':
+            elif allVars[i]=='lw':
                 self.lw[n]=float(allVars[i+1])
                 self.lw_err[n]=float(allVars[i+2])
             elif allVars[i]=='rt':

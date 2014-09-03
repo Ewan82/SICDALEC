@@ -13,8 +13,7 @@ def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
             Mat=Mat*Mlist[x+1]
         return Mat
 
-def SIC(i,j):
-
+def Hmat(i,j):
     Cf=58.0
     Mlist=[-9999]*(j-i)
     Hlist=[-9999]*(j-i)
@@ -28,7 +27,14 @@ def SIC(i,j):
     for x in range(1,j-i):
         stacklist[x]=Hlist[x]*Mfac(Mlist,x-1)
 
-    H=np.vstack(stacklist)
+    Hmat=np.vstack(stacklist)
+    
+    return Hmat
+
+
+def SIC(i,j):
+
+    H=Hmat(i,j)
 
     sigO_NEE=0.25
     R=np.matrix(sigO_NEE*np.identity(j-i))	

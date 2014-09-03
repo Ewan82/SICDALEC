@@ -25,7 +25,7 @@ def PlotoneSIC(i,j):
     
     import matplotlib.pyplot as plt
 
-    plt.plot(Xlist,SIClist)
+    plt.plot(Xlist,y)
     plt.xlabel('Day of observation of NEE')
     plt.ylabel('Shannon Information Content')
     plt.title('SIC varying with successive observations of NEE')
