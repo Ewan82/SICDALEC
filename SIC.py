@@ -13,15 +13,14 @@ def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
             Mat=Mat*Mlist[x+1]
         return Mat
 
-def Hmat(i,j):
+def Hmat(d,i,j):
     Cf=58.0
-    Mlist=[-9999]*(j-i)
     Hlist=[-9999]*(j-i)
+    Mlist=Mod.Modlist(d,i,j)[1]
 
     for x in range(i,j):
-        GPPdiff=Mod.GPPdiff(Cf,float(d.phi_d[x]),float(d.T_range[x]),float(d.R_tot[x]),float(d.T_max[x]),float(d.D[x]),float(d.I[x]))
+        GPPdiff=Mod.GPPdiff(Cf,d,x)
         Hlist[x-i]=np.matrix([[-(1-d.p_2)*GPPdiff, 0, 0, d.p_8*d.T[x], d.p_9*d.T[x]]])
-        Mlist[x-i]=np.matrix([[(1-d.p_5)+d.p_3*(1-d.p_2)*GPPdiff,0,0,0,0],[d.p_4*(1-d.p_3)*(1-d.p_2)*GPPdiff,(1-d.p_7),0,0,0],[(1-d.p_4)*(1-d.p_3)*(1-d.p_2)*GPPdiff,0,(1-d.p_6),0,0],[d.p_5,d.p_7,0,1-(d.p_1+d.p_8)*d.T[x],0],[0,0,d.p_6,d.p_1*d.T[x],1-d.p_9*d.T[x]]])
 	
     stacklist=[Hlist[0]]+[-9999]*(j-i-1) #Creates H hat matrix
     for x in range(1,j-i):
@@ -32,9 +31,9 @@ def Hmat(i,j):
     return Hmat
 
 
-def SIC(i,j):
+def SIC(d,i,j):
 
-    H=Hmat(i,j)
+    H=Hmat(d,i,j)
 
     sigO_NEE=0.25
     R=np.matrix(sigO_NEE*np.identity(j-i))	

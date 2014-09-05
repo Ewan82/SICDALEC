@@ -1,7 +1,7 @@
 import numpy as np
 import SIC as SIC
 
-def PlotsuccSIC(i,j):
+def PlotsuccSIC(d,i,j):
     Xlist=np.arange(i,j,1)
     SIClist=[]
     for x in range(i,j):
@@ -25,7 +25,7 @@ def PlotoneSIC(i,j):
     
     import matplotlib.pyplot as plt
 
-    plt.plot(Xlist,y)
+    plt.plot(Xlist,SIClist)
     plt.xlabel('Day of observation of NEE')
     plt.ylabel('Shannon Information Content')
     plt.title('SIC varying with successive observations of NEE')

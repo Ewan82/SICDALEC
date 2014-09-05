@@ -1,11 +1,11 @@
 import numpy as np
 import SIC as SIC
 
-def PlotsuccSIC(i,j):
+def PlotsuccSIC(d,i,j):
     Xlist=np.arange(i,j,1)
     SIClist=[]
     for x in range(i,j):
-         SIClist.append(SIC.SIC(i,x+1))
+         SIClist.append(SIC.SIC(d,i,x+1))
 
     import matplotlib.pyplot as plt
 

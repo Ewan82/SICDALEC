@@ -55,5 +55,18 @@ def LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d):
     M=np.matrix(ad.jacobian(Dalecoutput,[Cf,Cr,Cw,Cl,Cs]))
     
     return M
+  
     
-
+def Modlist(d,i,j):
+    Mlist=[-9999]*(j-i)
+    Clist=d.Clist[:]+[-9999]*(j-i)
+    for x in xrange(i,j):    
+        Cf=float(Clist[x-i][0])
+        Cr=float(Clist[x-i][1])
+        Cw=float(Clist[x-i][2])
+        Cl=float(Clist[x-i][3])
+        Cs=float(Clist[x-i][4])
+        Mlist[x-i]=LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d)  
+        Clist[(x+1)-i]=DALEC(Cf,Cr,Cw,Cl,Cs,x,d)
+    
+    return Clist,Mlist

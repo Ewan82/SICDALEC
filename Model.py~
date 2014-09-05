@@ -18,6 +18,7 @@ def GPP(Cf, d, x):
     
     return GPP
 
+
 def GPPdiff(Cf, d, x):
     Cf=ad.adnumber(Cf)
     L=Cf/111.
@@ -32,6 +33,7 @@ def GPPdiff(Cf, d, x):
     
     return GPP.d(Cf)
 
+
 def DALEC(Cf,Cr,Cw,Cl,Cs,x,d):
     GPPval=GPP(Cf, d, x)
     Cf2=(1-d.p_5)*Cf+d.p_3*(1-d.p_2)*GPPval
@@ -41,6 +43,7 @@ def DALEC(Cf,Cr,Cw,Cl,Cs,x,d):
     Cs2=(1-d.p_9*d.T[x])*Cs+d.p_6*Cw+d.p_1*d.T[x]*Cr
     
     return [Cf2,Cr2,Cw2,Cl2,Cs2]
+ 
     
 def LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d):
     Cf=ad.adnumber(Cf)
@@ -52,5 +55,18 @@ def LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d):
     M=np.matrix(ad.jacobian(Dalecoutput,[Cf,Cr,Cw,Cl,Cs]))
     
     return M
+  
     
-
+def Modlist(d,i,j):
+    Mlist=[-9999]*(j-i)
+    Clist=d.Clist[:]+[-9999]*(j-i)
+    for x in xrange(i,j):    
+        Cf=float(Clist[x-i][0])
+        Cr=float(Clist[x-i][1])
+        Cw=float(Clist[x-i][2])
+        Cl=float(Clist[x-i][3])
+        Cs=float(Clist[x-i][4])
+        Mlist[x-i]=LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d)  
+        Clist[(x+1)-i]=DALEC(Cf,Cr,Cw,Cl,Cs,x,d)
+    
+    return Clist,Mlist
