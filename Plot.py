@@ -21,12 +21,12 @@ def PlotoneSIC(d,i,j):
     for x in range(i,j):
         SIClist[x-i]=SIC.SIC(d,x,x+1)
         
-    y=[sum(SIClist[:i+1]) for i in range(len(SIClist))]
+    #y=[sum(SIClist[:i+1]) for i in range(len(SIClist))]
     
     import matplotlib.pyplot as plt
 
-    plt.plot(Xlist,y)
+    plt.plot(Xlist,SIClist)
     plt.xlabel('Day of observation of NEE')
     plt.ylabel('Shannon Information Content')
-    plt.title('SIC varying with successive observations of NEE')
+    plt.title('SIC for a single observation of NEE')
     plt.show()

@@ -1,10 +1,10 @@
-#ACM model for GPP
+
 import ad
 import numpy as np
 import Data as D
 d=D.dalecData()
 
-
+#ACM & DALEC model equations:
 def GPP(Cf, d, x): #Gross Primary Production (GPP) function
     L=Cf/111.
     q=d.a_3-d.a_4
@@ -53,11 +53,6 @@ def LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d): #Tangent Linear DALEC evergreen model
     return M
 
 	
-def NEE(Cf,Cl,Cs,x,d):
-    NEE=-(1-d.p_2)*GPP(Cf, d, x)+d.p_8*d.T[x]*Cl+d.p_9*d.T[x]*Cs    
-    return NEE
-
-	
 def Modlist(d,i,j): #Produces a list of carbon pool values and tangent linear matrices between two times steps (i and j) using d.Clist as initial conditions.
     Mlist=[-9999]*(j-i)
     Clist=d.Clist[:]+[-9999]*(j-i)
@@ -70,3 +65,37 @@ def Modlist(d,i,j): #Produces a list of carbon pool values and tangent linear ma
         Mlist[x-i]=LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d)  
         Clist[(x+1)-i]=DALEC(Cf,Cr,Cw,Cl,Cs,x,d)    
     return Clist,Mlist
+
+
+#Observations:
+def NEE(Cf,Cr,Cw,Cl,Cs,x,d):
+    NEE=-(1-d.p_2)*GPP(Cf, d, x)+d.p_8*d.T[x]*Cl+d.p_9*d.T[x]*Cs    
+    return NEE
+
+def LF(Cf,Cr,Cw,Cl,Cs,x,d):    
+    LF=d.p_5*Cf
+    return LF
+    
+def LW(Cf,Cr,Cw,Cl,Cs,x,d):
+    LW=d.p_6*Cw
+    return LW
+    
+def Cf(Cf,Cr,Cw,Cl,Cs,x,d):
+    Cf=Cf
+    return Cf
+    
+def Cr(Cf,Cr,Cw,Cl,Cs,x,d):
+    Cr=Cr
+    return Cr
+    
+def Cw(Cf,Cr,Cw,Cl,Cs,x,d):
+    Cw=Cw
+    return Cw
+    
+def Cl(Cf,Cr,Cw,Cl,Cs,x,d):
+    Cl=Cl
+    return Cl
+    
+def Cs(Cf,Cr,Cw,Cl,Cs,x,d):
+    Cs=Cs
+    return Cs    
