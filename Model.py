@@ -1,20 +1,18 @@
-
 import ad
 import numpy as np
-import Data as D
-d=D.dalecData()
+
 
 #ACM & DALEC model equations:
 def GPP(Cf, d, x): #Gross Primary Production (GPP) function
     L=Cf/111.
     q=d.a_3-d.a_4
-    gc=((abs(float(d.phi_d[x])))**(d.a_10))/(0.5*float(d.T_range[x])+d.a_6*float(d.R_tot[x]))
-    p=((d.a_1*d.N*L)/gc)*np.exp(d.a_8*float(d.T_max[x]))
+    gc=((abs(d.phi_d[x]))**(d.a_10))/(0.5*d.T_range[x]+d.a_6*d.R_tot[x])
+    p=((d.a_1*d.N*L)/gc)*np.exp(d.a_8*d.T_max[x])
     Ci=0.5*(d.C_a+q-p+np.sqrt((d.C_a+q-p)**2-4*(d.C_a*q-p*d.a_3)))
     E0=(d.a_7*L**2)/(L**2+d.a_9)
-    delta=-0.408*np.cos(((360*(float(d.D[x])+10)*np.pi)/(365*180)))
+    delta=-0.408*np.cos(((360*(d.D[x]+10)*np.pi)/(365*180)))
     s=24*np.arccos((-np.tan(d.bigdelta)*np.tan(delta)))/np.pi
-    GPP=(E0*float(d.I[x])*gc*(d.C_a-Ci)*(d.a_2*s+d.a_5))/(E0*float(d.I[x])+gc*(d.C_a-Ci))    
+    GPP=(E0*d.I[x]*gc*(d.C_a-Ci)*(d.a_2*s+d.a_5))/(E0*d.I[x]+gc*(d.C_a-Ci))    
     return GPP
 
 
@@ -22,13 +20,13 @@ def GPPdiff(Cf, d, x): #derivative of GPP
     Cf=ad.adnumber(Cf)
     L=Cf/111.
     q=d.a_3-d.a_4
-    gc=((abs(float(d.phi_d[x])))**(d.a_10))/(0.5*float(d.T_range[x])+d.a_6*float(d.R_tot[x]))
-    p=((d.a_1*d.N*L)/gc)*np.exp(d.a_8*float(d.T_max[x]))
+    gc=((abs(d.phi_d[x]))**(d.a_10))/(0.5*d.T_range[x]+d.a_6*d.R_tot[x])
+    p=((d.a_1*d.N*L)/gc)*np.exp(d.a_8*d.T_max[x])
     Ci=0.5*(d.C_a+q-p+np.sqrt((d.C_a+q-p)**2-4*(d.C_a*q-p*d.a_3)))
     E0=(d.a_7*L**2)/(L**2+d.a_9)
-    delta=-0.408*np.cos(((360*(float(d.D[x])+10)*np.pi)/(365*180)))
+    delta=-0.408*np.cos(((360*(d.D[x]+10)*np.pi)/(365*180)))
     s=24*np.arccos((-np.tan(d.bigdelta)*np.tan(delta)))/np.pi
-    GPP=(E0*float(d.I[x])*gc*(d.C_a-Ci)*(d.a_2*s+d.a_5))/(E0*float(d.I[x])+gc*(d.C_a-Ci))    
+    GPP=(E0*d.I[x]*gc*(d.C_a-Ci)*(d.a_2*s+d.a_5))/(E0*d.I[x]+gc*(d.C_a-Ci))    
     return GPP.d(Cf)
 
 

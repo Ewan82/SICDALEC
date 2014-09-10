@@ -4,26 +4,26 @@ import ad
 
 class dalecData( ): 
 
-  def __init__(self):
+  def __init__(self,lenrun):
     
     self.f=open("dalec_drivers.txt","r")
     self.allLines=self.f.readlines()
-    self.lenrun=1095
+    self.lenrun=lenrun
     
     #'Observation data for DA'
-    self.data=np.matrix([[None]*9 for i in range(self.lenrun)])
-    self.gpp=[None]*self.lenrun
-    self.gpp_err=[None]*self.lenrun
-    self.lf=[None]*self.lenrun
-    self.lf_err=[None]*self.lenrun
-    self.lw=[None]*self.lenrun
-    self.lw_err=[None]*self.lenrun
-    self.rt=[None]*self.lenrun
-    self.rt_err=[None]*self.lenrun
-    self.nee=[None]*self.lenrun
-    self.nee_err=[None]*self.lenrun
-    self.cf=[None]*self.lenrun
-    self.cf_err=[None]*self.lenrun
+    self.data=np.array([[-9999.]*9 for i in range(self.lenrun)])
+    self.gpp=[-9999.]*self.lenrun
+    self.gpp_err=[-9999.]*self.lenrun
+    self.lf=[-9999.]*self.lenrun
+    self.lf_err=[-9999.]*self.lenrun
+    self.lw=[-9999.]*self.lenrun
+    self.lw_err=[-9999.]*self.lenrun
+    self.rt=[-9999.]*self.lenrun
+    self.rt_err=[-9999.]*self.lenrun
+    self.nee=[-9999.]*self.lenrun
+    self.nee_err=[-9999.]*self.lenrun
+    self.cf=[-9999.]*self.lenrun
+    self.cf_err=[-9999.]*self.lenrun
 
     n=-1
     for x in xrange(0,self.lenrun):
@@ -77,13 +77,10 @@ class dalecData( ):
 
     #'Daily temperatures degC'
     self.T_mean=self.data[:,1]
-    self.T_max=np.array(self.data[:,2])
-    self.T_min=np.array(self.data[:,3])
-
+    self.T_max=self.data[:,2]
+    self.T_min=self.data[:,3]
     self.T_range=self.T_max-self.T_min
-    self.T=[None]*len(self.T_mean)
-    for i in range(len(self.T_mean)):
-        self.T[i]=0.5*(np.exp(0.0693*float(self.T_mean[i]))) #Temp term
+    self.T=0.5*(np.exp(0.0693*self.T_mean)) #Temp term
 
     #'Driving Data'
     self.I=self.data[:,4] #incident radiation

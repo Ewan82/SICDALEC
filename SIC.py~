@@ -1,8 +1,8 @@
 #This will have code in
 import numpy as np
 import Model as Mod
-import Data as D
-d=D.dalecData()
+import sys
+import ad
 
 def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
     if a==0:
@@ -13,15 +13,18 @@ def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
             Mat=Mat*Mlist[x+1]
         return Mat
 
-def Hmat(d,i,j):
-    Cf=58.0
-    Mlist=[-9999]*(j-i)
+def Hmat(d,i,j,obs):
     Hlist=[-9999]*(j-i)
+    Clist,Mlist=Mod.Modlist(d,i,j)
+    obsdict={'NEE': Mod.NEE, 'LF': Mod.LF, 'LW': Mod.LW, 'Cf': Mod.Cf, 'Cr': Mod.Cr, 'Cw': Mod.Cw, 'Cl': Mod.Cl, 'Cs': Mod.Cs}
 
     for x in range(i,j):
-        GPPdiff=Mod.GPPdiff(Cf,d,x)
-        Hlist[x-i]=np.matrix([[-(1-d.p_2)*GPPdiff, 0, 0, d.p_8*d.T[x], d.p_9*d.T[x]]])
-        Mlist[x-i]=np.matrix([[(1-d.p_5)+d.p_3*(1-d.p_2)*GPPdiff,0,0,0,0],[d.p_4*(1-d.p_3)*(1-d.p_2)*GPPdiff,(1-d.p_7),0,0,0],[(1-d.p_4)*(1-d.p_3)*(1-d.p_2)*GPPdiff,0,(1-d.p_6),0,0],[d.p_5,d.p_7,0,1-(d.p_1+d.p_8)*d.T[x],0],[0,0,d.p_6,d.p_1*d.T[x],1-d.p_9*d.T[x]]])
+        Cf=ad.adnumber(Clist[x][0])
+        Cr=ad.adnumber(Clist[x][1])
+        Cw=ad.adnumber(Clist[x][2])
+        Cl=ad.adnumber(Clist[x][3])
+        Cs=ad.adnumber(Clist[x][4])
+        Hlist[x-i]=ad.jacobian(obsdict[obs](Cf,Cr,Cw,Cl,Cs,x,d),[Cf,Cr,Cw,Cl,Cs])
 	
     stacklist=[Hlist[0]]+[-9999]*(j-i-1) #Creates H hat matrix
     for x in range(1,j-i):
@@ -32,9 +35,9 @@ def Hmat(d,i,j):
     return Hmat
 
 
-def SIC(d,i,j):
+def SIC(d,i,j,obs):
 
-    H=Hmat(d,i,j)
+    H=Hmat(d,i,j,obs)
 
     sigO_NEE=0.25
     R=np.matrix(sigO_NEE*np.identity(j-i))	
