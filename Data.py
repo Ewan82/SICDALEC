@@ -65,7 +65,7 @@ class dalecData( ):
     self.sigB_cr=(self.Cr*0.2)**2 #20%
     self.sigB_cl=(self.Cl*0.2)**2 #20%
     self.sigB_cs=(self.Cs*0.2)**2 #20% 
-    self.B=np.matrix([[self.sigB_cf,0,0,0,0],[0,self.sigB_cw,0,0,0],[0,0,self.sigB_cr,0,0],[0,0,0,self.sigB_cl,0],[0,0,0,0,self.sigB_cs]])
+    self.B=np.matrix([[self.sigB_cf,0,0,0,0],[0,self.sigB_cr,0,0,0],[0,0,self.sigB_cw,0,0],[0,0,0,self.sigB_cl,0],[0,0,0,0,self.sigB_cs]])
 
     #'Observartion variances for carbon pools and NEE' 
     self.sigO_cf=(self.Cf*0.1)**2 #10%
@@ -74,6 +74,8 @@ class dalecData( ):
     self.sigO_cl=(self.Cl*0.3)**2 #30%
     self.sigO_cs=(self.Cs*0.3)**2 #30% 
     self.sigO_nee=0.5**2 #(gCm-2day-1)**2
+    self.sigO_lf=0.2**2
+    self.sigO_lw=0.2**2
 
     #'Daily temperatures degC'
     self.T_mean=self.data[:,1]

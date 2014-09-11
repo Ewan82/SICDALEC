@@ -74,12 +74,13 @@ class dalecData( ):
     self.sigO_cl=(self.Cl*0.3)**2 #30%
     self.sigO_cs=(self.Cs*0.3)**2 #30% 
     self.sigO_nee=0.5**2 #(gCm-2day-1)**2
+    self.sigO_lf=0.2**2
+    self.sigO_lw=0.2**2
 
     #'Daily temperatures degC'
     self.T_mean=self.data[:,1]
     self.T_max=self.data[:,2]
     self.T_min=self.data[:,3]
-
     self.T_range=self.T_max-self.T_min
     self.T=0.5*(np.exp(0.0693*self.T_mean)) #Temp term
 

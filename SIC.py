@@ -13,9 +13,12 @@ def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
             Mat=Mat*Mlist[x+1]
         return Mat
 
-def Hmat(d,i,j,obs):
-    Hlist=[-9999]*(j-i)
+def Hmat(d,i,j,obs): #Creates H^hat matrix for given obs, i,j and data d
+  
+    Hlist=[-9999]*(j-i) 
+    
     Clist,Mlist=Mod.Modlist(d,i,j)
+    
     obsdict={'NEE': Mod.NEE, 'LF': Mod.LF, 'LW': Mod.LW, 'Cf': Mod.Cf, 'Cr': Mod.Cr, 'Cw': Mod.Cw, 'Cl': Mod.Cl, 'Cs': Mod.Cs}
 
     for x in range(i,j):
@@ -32,17 +35,20 @@ def Hmat(d,i,j,obs):
 
     Hmat=np.vstack(stacklist)
     
-    return Hmat
+    return np.matrix(Hmat)
+    
 
 
-def SIC(d,i,j,obs):
-
+def SIC(d,i,j,obs): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A|), measure of reduction in entropy given a set of observations) 
+    
+    stdO_dict={'NEE': d.sigO_nee, 'LF': d.sigO_lf, 'LW': d.sigO_lw, 'Cf': d.sigO_cf, 'Cr': d.sigO_cr, 'Cw': d.sigO_cw, 'Cl': d.sigO_cl, 'Cs': d.sigO_cs}
+    
     H=Hmat(d,i,j,obs)
 
-    sigO_NEE=0.25
-    R=np.matrix(sigO_NEE*np.identity(j-i))	
+    sigO=stdO_dict[obs]
+    R=np.matrix(sigO*np.identity(j-i))	
 	
-    B=np.matrix([[d.sigB_cf,0,0,0,0],[0,d.sigB_cw,0,0,0],[0,0,d.sigB_cr,0,0],[0,0,0,d.sigB_cl,0],[0,0,0,0,d.sigB_cs]]) #Background error covariance matrix
+    B=d.B #Background error covariance matrix
 
     J2nddiff=B.I+H.T*R.I*H #Calculates Hessian
 
