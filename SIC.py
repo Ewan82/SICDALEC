@@ -4,6 +4,7 @@ import Model as Mod
 import sys
 import ad
 
+
 def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
     if a==0:
         return Mlist[0]
@@ -12,6 +13,7 @@ def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
         for x in xrange(0,a):
             Mat=Mat*Mlist[x+1]
         return Mat
+
 
 def Hmat(d,i,j,obs): #Creates H^hat matrix for given obs, i,j and data d
   
@@ -38,7 +40,6 @@ def Hmat(d,i,j,obs): #Creates H^hat matrix for given obs, i,j and data d
     return np.matrix(Hmat)
     
 
-
 def SIC(d,i,j,obs): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A|), measure of reduction in entropy given a set of observations) 
     
     stdO_dict={'NEE': d.sigO_nee, 'LF': d.sigO_lf, 'LW': d.sigO_lw, 'Cf': d.sigO_cf, 'Cr': d.sigO_cr, 'Cw': d.sigO_cw, 'Cl': d.sigO_cl, 'Cs': d.sigO_cs}
@@ -57,3 +58,7 @@ def SIC(d,i,j,obs): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A
     return SIC	
 
 	
+def Obility(d,i,j,obs):
+    H=Hmat(d,i,j,obs)
+    
+    return np.linalg.matrix_rank(H)

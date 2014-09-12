@@ -4,6 +4,7 @@ import Model as Mod
 import sys
 import ad
 
+
 def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
     if a==0:
         return Mlist[0]
@@ -13,9 +14,13 @@ def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
             Mat=Mat*Mlist[x+1]
         return Mat
 
+
 def Hmat(d,i,j,obs): #Creates H^hat matrix for given obs, i,j and data d
-    Hlist=[-9999]*(j-i)
+  
+    Hlist=[-9999]*(j-i) 
+    
     Clist,Mlist=Mod.Modlist(d,i,j)
+    
     obsdict={'NEE': Mod.NEE, 'LF': Mod.LF, 'LW': Mod.LW, 'Cf': Mod.Cf, 'Cr': Mod.Cr, 'Cw': Mod.Cw, 'Cl': Mod.Cl, 'Cs': Mod.Cs}
 
     for x in range(i,j):
