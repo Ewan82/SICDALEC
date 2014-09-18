@@ -10,9 +10,9 @@ def PlotsuccSIC(d,i,j,obs):
     import matplotlib.pyplot as plt
 
     plt.plot(Xlist,SIClist)
-    plt.xlabel('Day of observation of NEE')
+    plt.xlabel('Day of observation')
     plt.ylabel('Shannon Information Content')
-    plt.title('SIC varying with successive observations of NEE')
+    plt.title('SIC varying with successive observations')
     plt.show()
     
 def PlotoneSIC(d,i,j,obs):
