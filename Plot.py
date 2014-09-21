@@ -30,3 +30,17 @@ def PlotoneSIC(d,i,j,obs):
     plt.ylabel('Shannon Information Content')
     plt.title('SIC for a single observation of NEE')
     plt.show()
+
+def PlotsuccDOFS(d,i,j,obs):
+    Xlist=np.arange(i,j,1)
+    DOFSlist=[-9999]*(j-i)
+    for x in range(i,j):
+         DOFSlist[x-i]=SIC.DOFS(d,i,x+1,obs)
+
+    import matplotlib.pyplot as plt
+
+    plt.plot(Xlist,DOFSlist)
+    plt.xlabel('Day of observation')
+    plt.ylabel('Degrees of Freedom for Signal')
+    plt.title('DOFS varying with successive observations')
+    plt.show()

@@ -29,11 +29,11 @@ def Hmat(d,i,j,obs): #Creates H^hat matrix for given obs, i,j and data d
     obsdict={'NEE': Mod.NEE, 'LF': Mod.LF, 'LW': Mod.LW, 'Cf': Mod.Cf, 'Cr': Mod.Cr, 'Cw': Mod.Cw, 'Cl': Mod.Cl, 'Cs': Mod.Cs}
 
     for x in range(i,j):
-        Cf=ad.adnumber(Clist[x-i][0])
-        Cr=ad.adnumber(Clist[x-i][1])
-        Cw=ad.adnumber(Clist[x-i][2])
-        Cl=ad.adnumber(Clist[x-i][3])
-        Cs=ad.adnumber(Clist[x-i][4])
+        Cf=ad.adnumber(d.Cf) #Clist[x-i][0])
+        Cr=ad.adnumber(d.Cr) #Clist[x-i][1])
+        Cw=ad.adnumber(d.Cw) #Clist[x-i][2])
+        Cl=ad.adnumber(d.Cl) #Clist[x-i][3])
+        Cs=ad.adnumber(d.Cs) #Clist[x-i][4])
         for y in range(0,len(Obslist)):
             Hhold[y]=ad.jacobian(obsdict[Obslist[y]](Cf,Cr,Cw,Cl,Cs,x,d),[Cf,Cr,Cw,Cl,Cs])
         Hlist[x-i]=np.vstack(Hhold)
@@ -80,6 +80,15 @@ def SIC(d,i,j,obs): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A
 
     return SIC	
 
+
+def DOFS(d,i,j,obs):
+    H=Hmat(d,i,j,obs)
+    R=Rmat(d,i,j,obs)
+    B=d.B
+    A=(B.I+H.T*R.I*H).I
+    DOFS=len(d.Clist[0])-np.trace(B.I*A)
+    return DOFS
+	
 	
 def Obility(d,i,j,obs):
     H=Hmat(d,i,j,obs)
