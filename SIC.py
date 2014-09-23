@@ -29,7 +29,7 @@ def Hmat(d,i,j,obs): #Creates H^hat matrix for given obs, i,j and data d
     obsdict={'NEE': Mod.NEE, 'LF': Mod.LF, 'LW': Mod.LW, 'Cf': Mod.Cf, 'Cr': Mod.Cr, 'Cw': Mod.Cw, 'Cl': Mod.Cl, 'Cs': Mod.Cs}
 
     for x in range(i,j):
-        Cf=ad.adnumber(d.Cf) #Clist[x-i][0])
+        Cf=ad.adnumber(d.Cf) #Clist[x-i][0]) #Redo this!!!
         Cr=ad.adnumber(d.Cr) #Clist[x-i][1])
         Cw=ad.adnumber(d.Cw) #Clist[x-i][2])
         Cl=ad.adnumber(d.Cl) #Clist[x-i][3])
