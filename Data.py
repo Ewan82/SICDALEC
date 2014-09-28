@@ -4,7 +4,7 @@ import ad
 
 class dalecData( ): 
 
-  def __init__(self,lenrun):
+  def __init__(self,lenrun,k):
     
     self.f=open("dalec_drivers.txt","r")
     self.allLines=self.f.readlines()
@@ -78,19 +78,19 @@ class dalecData( ):
     self.sigO_lw=0.2**2
 
     #'Daily temperatures degC'
-    self.T_mean=self.data[:,1]
-    self.T_max=self.data[:,2]
-    self.T_min=self.data[:,3]
-    self.T_range=self.T_max-self.T_min
-    self.T=0.5*(np.exp(0.0693*self.T_mean)) #Temp term
+    self.T_mean=self.data[:,1].tolist()*k
+    self.T_max=self.data[:,2].tolist()*k
+    self.T_min=self.data[:,3].tolist()*k
+    self.T_range=np.array(self.T_max)-np.array(self.T_min)
+    self.T=0.5*(np.exp(0.0693*np.array(self.T_mean))) #Temp term
 
     #'Driving Data'
-    self.I=self.data[:,4] #incident radiation
-    self.phi_d=self.data[:,5] #max. soil leaf water potential difference
-    self.R_tot=self.data[:,7] #total plant-soil hydrolic resistance
+    self.I=self.data[:,4].tolist()*k #incident radiation
+    self.phi_d=self.data[:,5].tolist()*k #max. soil leaf water potential difference
+    self.R_tot=self.data[:,7].tolist()*k #total plant-soil hydrolic resistance
     self.C_a=355.0 #atmospheric carbon
     self.N=2.7 #average foliar N    
-    self.D=self.data[:,0]#day of year
+    self.D=self.data[:,0].tolist()*k #day of year
     self.bigdelta=0.908 #latitutde of forest site in radians
     
     #'Parameters'
