@@ -4,7 +4,7 @@ import SIC as SIC
 def PlotsuccSIC(d,i,j,obs):
     Xlist=np.arange(i,j,1)
     SIClist=[-9999]*(j-i)
-    for x in range(i,j):
+    for x in xrange(i,j):
          SIClist[x-i]=SIC.SIC(d,i,x+1,obs)
 
     import matplotlib.pyplot as plt
@@ -18,7 +18,7 @@ def PlotsuccSIC(d,i,j,obs):
 def PlotoneSIC(d,i,j,obs):
     Xlist=np.arange(i,j,1)
     SIClist=[-9999]*(j-i)
-    for x in range(i,j):
+    for x in xrange(i,j):
         SIClist[x-i]=SIC.SIC(d,x,x+1,obs)
         
     #y=[sum(SIClist[:i+1]) for i in range(len(SIClist))]
@@ -34,7 +34,7 @@ def PlotoneSIC(d,i,j,obs):
 def PlotsuccDOFS(d,i,j,obs):
     Xlist=np.arange(i,j,1)
     DOFSlist=[-9999]*(j-i)
-    for x in range(i,j):
+    for x in xrange(i,j):
          DOFSlist[x-i]=SIC.DOFS(d,i,x+1,obs)
 
     import matplotlib.pyplot as plt

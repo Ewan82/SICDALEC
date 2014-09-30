@@ -28,7 +28,7 @@ def Hmat(d,i,j,obs): #Creates H^hat matrix for given obs, i,j and data d
     
     obsdict={'NEE': Mod.NEE, 'LF': Mod.LF, 'LW': Mod.LW, 'Cf': Mod.Cf, 'Cr': Mod.Cr, 'Cw': Mod.Cw, 'Cl': Mod.Cl, 'Cs': Mod.Cs}
 
-    for x in range(i,j):
+    for x in xrange(i,j):
         Cf=ad.adnumber(d.Cf) #Clist[x-i][0]) #Redo this!!!
         Cr=ad.adnumber(d.Cr) #Clist[x-i][1])
         Cw=ad.adnumber(d.Cw) #Clist[x-i][2])
@@ -39,7 +39,7 @@ def Hmat(d,i,j,obs): #Creates H^hat matrix for given obs, i,j and data d
         Hlist[x-i]=np.vstack(Hhold)
 	
     stacklist=[Hlist[0]]+[-9999]*(j-i-1) #Creates H hat matrix
-    for x in range(1,j-i):
+    for x in xrange(1,j-i):
         stacklist[x]=Hlist[x]*Mfac(Mlist,x-1)
 
     Hmat=np.vstack(stacklist)
@@ -55,12 +55,12 @@ def Rmat(d,i,j,obs):
     
     sigO=[-9999]*len(Obslist)
 
-    for y in range(0,len(Obslist)):
+    for y in xrange(0,len(Obslist)):
         sigO[y]=stdO_dict[Obslist[y]]
         
     R=np.matrix(np.identity((j-i)*len(Obslist)))
     sigR=sigO*(j-i)
-    for x in range(0,(j-i)*len(sigO)):
+    for x in xrange(0,(j-i)*len(sigO)):
         R[x,x]=sigR[x]
             
     return R
