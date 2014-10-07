@@ -1,12 +1,14 @@
 import numpy as np
 import ad
+import os
 
 
 class dalecData( ): 
 
   def __init__(self,lenrun,k):
     
-    self.f=open("dalec_drivers.txt","r")
+    self.homepath=os.path.expanduser("~")
+    self.f=open(self.homepath+"/SICDALEC/data/dalec_drivers.txt","r")
     self.allLines=self.f.readlines()
     self.lenrun=lenrun
     
@@ -14,7 +16,7 @@ class dalecData( ):
     self.data=np.array([[-9999.]*9 for i in range(self.lenrun)])
     self.gpp=[-9999.]*self.lenrun
     self.gpp_err=[-9999.]*self.lenrun
-    self.lf=[-9999.]*self.lenrun
+    self.lf=[-9999.]*self.lenrun ###REDO THIS AS A CLASS METHOD RATHER THAN LIKE THIS STUPID, ALSO MAKE CLIST/MLIST A PASSABLE OBJECT TO THE FNS IN MODEL/SIC!!!###
     self.lf_err=[-9999.]*self.lenrun
     self.lw=[-9999.]*self.lenrun
     self.lw_err=[-9999.]*self.lenrun
@@ -57,7 +59,7 @@ class dalecData( ):
     self.Cw=770.0
     self.Cl=40.0
     self.Cs=9897.0
-    self.Clist=[[self.Cf,self.Cr,self.Cw,self.Cl,self.Cs]]
+    self.Clist=np.array([[self.Cf,self.Cr,self.Cw,self.Cl,self.Cs]])
 
     #'Background variances for carbon pools & B matrix'
     self.sigB_cf=(self.Cf*0.2)**2 #20%

@@ -1,18 +1,26 @@
-import ad
-import numpy as np
+"""
+Put a docstring here.
+"""
 
+import numpy as np
+import ad
 
 #ACM & DALEC model equations:
-def GPP(Cf, d, x): #Gross Primary Production (GPP) function
-    L=Cf/111.
-    q=d.a_3-d.a_4
-    gc=((abs(d.phi_d[x]))**(d.a_10))/(0.5*d.T_range[x]+d.a_6*d.R_tot[x])
-    p=((d.a_1*d.N*L)/gc)*np.exp(d.a_8*d.T_max[x])
-    Ci=0.5*(d.C_a+q-p+np.sqrt((d.C_a+q-p)**2-4*(d.C_a*q-p*d.a_3)))
-    E0=(d.a_7*L**2)/(L**2+d.a_9)
-    delta=-0.408*np.cos(((360*(d.D[x]+10)*np.pi)/(365*180)))
-    s=24*np.arccos((-np.tan(d.bigdelta)*np.tan(delta)))/np.pi
-    GPP=(E0*d.I[x]*gc*(d.C_a-Ci)*(d.a_2*s+d.a_5))/(E0*d.I[x]+gc*(d.C_a-Ci))    
+def GPP(Cf, d, x):
+    """
+    Gross Primary Production (GPP) function
+    """
+    L = Cf / 111.
+    q = d.a_3 - d.a_4
+    gc = ((abs(d.phi_d[x]))**(d.a_10)) / (0.5*d.T_range[x] + d.a_6*d.R_tot[x])
+    p = ((d.a_1*d.N*L) / gc)*np.exp(d.a_8*d.T_max[x])
+    Ci = 0.5*(d.C_a + q - p + np.sqrt((d.C_a + q - p)**2 \
+         - 4*(d.C_a*q - p*d.a_3)))
+    E0 = (d.a_7*L**2) / (L**2 + d.a_9)
+    delta = - 0.408*np.cos(((360*(d.D[x] + 10)*np.pi) / (365*180)))
+    s = 24*np.arccos(( - np.tan(d.bigdelta)*np.tan(delta))) / np.pi
+    GPP = (E0*d.I[x]*gc*(d.C_a - Ci)*(d.a_2*s + d.a_5)) / \
+          (E0*d.I[x] + gc*(d.C_a - Ci))    
     return GPP
 
 
@@ -52,8 +60,8 @@ def LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d): #Tangent Linear DALEC evergreen model
 
 	
 def Modlist(d,i,j): #Produces a list of carbon pool values and tangent linear matrices between two times steps (i and j) using d.Clist as initial conditions.
-    Mlist=[-9999]*(j-i)
-    Clist=d.Clist[:]+[-9999]*(j-i)
+    Mlist=np.ones(j-i)*-9999.
+    Clist=np.concatenate([d.Clist, np.ones(j-i)+-9999.])
     for x in xrange(i,j):    
         Cf=float(Clist[x-i][0])
         Cr=float(Clist[x-i][1])
