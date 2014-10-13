@@ -45,7 +45,7 @@ def DALEC(Cf,Cr,Cw,Cl,Cs,x,d): #DALEC evergreen model equations
     Cw2=(1-d.p_6)*Cw+(1-d.p_4)*(1-d.p_3)*(1-d.p_2)*GPPval    
     Cl2=(1-(d.p_1+d.p_8)*d.T[x])*Cl+d.p_5*Cf+d.p_7*Cr
     Cs2=(1-d.p_9*d.T[x])*Cs+d.p_6*Cw+d.p_1*d.T[x]*Cr    
-    return [Cf2,Cr2,Cw2,Cl2,Cs2]
+    return np.array([Cf2,Cr2,Cw2,Cl2,Cs2])
  
     
 def LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d): #Tangent Linear DALEC evergreen model
@@ -60,8 +60,8 @@ def LinDALEC(Cf,Cr,Cw,Cl,Cs,x,d): #Tangent Linear DALEC evergreen model
 
 	
 def Modlist(d,i,j): #Produces a list of carbon pool values and tangent linear matrices between two times steps (i and j) using d.Clist as initial conditions.
-    Mlist=np.ones(j-i)*-9999.
-    Clist=np.concatenate([d.Clist, np.ones(j-i)+-9999.])
+    Mlist=np.ones((j-i,5,5))*-9999.
+    Clist=np.concatenate((d.Clist, np.ones((j-i,5))*-9999.))
     for x in xrange(i,j):    
         Cf=float(Clist[x-i][0])
         Cr=float(Clist[x-i][1])

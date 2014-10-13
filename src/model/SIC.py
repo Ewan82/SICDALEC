@@ -8,19 +8,19 @@ import re
 
 def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
     if a==0:
-        return Mlist[0]
+        return np.matrix(Mlist[0])
     else:
-        Mat=Mlist[0]
+        Mat=np.matrix(Mlist[0])
         for x in xrange(0,a):
-            Mat=Mat*Mlist[x+1]
+            Mat=Mat*np.matrix(Mlist[x+1])
         return Mat
 
 
-def Hmat(d,i,j,obs): #Creates H^hat matrix for given obs, i,j and data d
+def Hmat(d,i,j,obs,Mlist): #Creates H^hat matrix for given obs, i,j and data d
   
     Hlist=[-9999]*(j-i) 
     
-    Clist,Mlist=Mod.Modlist(d,i,j)
+    #Clist,Mlist=Mod.Modlist(d,i,j)
     
     Obslist=re.findall(r'[^,;\s]+', obs)
     
@@ -66,9 +66,9 @@ def Rmat(d,i,j,obs):
     return R
       
     
-def SIC(d,i,j,obs): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A|), measure of reduction in entropy given a set of observations) 
+def SIC(d,i,j,obs,Mlist): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A|), measure of reduction in entropy given a set of observations)
     
-    H=Hmat(d,i,j,obs)
+    H=Hmat(d,i,j,obs,Mlist)
     
     R=Rmat(d,i,j,obs)
     	

@@ -1,11 +1,13 @@
 import numpy as np
 import SIC as SIC
+import Model as Mod
 
 def PlotsuccSIC(d,i,j,obs):
+    Clist,Mlist=Mod.Modlist(d,i,j)
     Xlist=np.arange(i,j,1)
-    SIClist=[-9999]*(j-i)
+    SIClist=np.ones(j-i)*-9999
     for x in xrange(i,j):
-         SIClist[x-i]=SIC.SIC(d,i,x+1,obs)
+         SIClist[x-i]=SIC.SIC(d,i,x+1,obs,Mlist)
 
     import matplotlib.pyplot as plt
 
