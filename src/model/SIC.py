@@ -1,7 +1,6 @@
 #This will have code in
 import numpy as np
 import Model as Mod
-import sys
 import ad
 import re
 
@@ -12,21 +11,20 @@ def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
     else:
         Mat=np.matrix(Mlist[0])
         for x in xrange(0,a):
-            Mat=Mat*np.matrix(Mlist[x+1])
+            Mat=np.matrix(Mlist[x+1])*Mat
         return Mat
 
 
-def Hmat(d,i,j,obs,Mlist): #Creates H^hat matrix for given obs, i,j and data d
+def Hmat(d,i,j,obs_str,Mlist): #Creates H^hat matrix for given obs, i,j and data d
   
     Hlist=[-9999]*(j-i) 
     
-    #Clist,Mlist=Mod.Modlist(d,i,j)
-    
-    Obslist=re.findall(r'[^,;\s]+', obs)
+    Obslist=re.findall(r'[^,;\s]+', obs_str)
     
     Hhold=[-9999]*len(Obslist)
     
-    obsdict={'NEE': Mod.NEE, 'LF': Mod.LF, 'LW': Mod.LW, 'Cf': Mod.Cf, 'Cr': Mod.Cr, 'Cw': Mod.Cw, 'Cl': Mod.Cl, 'Cs': Mod.Cs}
+    obsdict={'nee': Mod.NEE, 'lf': Mod.LF, 'lw': Mod.LW, 'cf': Mod.Cf, \
+             'cr': Mod.Cr, 'cw': Mod.Cw, 'cl': Mod.Cl, 'cs': Mod.Cs}
 
     for x in xrange(i,j):
         Cf=ad.adnumber(d.Cf) #Clist[x-i][0]) #Redo this!!!
@@ -47,11 +45,13 @@ def Hmat(d,i,j,obs,Mlist): #Creates H^hat matrix for given obs, i,j and data d
     return np.matrix(Hmat)
     
     
-def Rmat(d,i,j,obs):
+def Rmat(d,i,j,obs_str):
 
-    stdO_dict={'NEE': d.sigO_nee, 'LF': d.sigO_lf, 'LW': d.sigO_lw, 'Cf': d.sigO_cf, 'Cr': d.sigO_cr, 'Cw': d.sigO_cw, 'Cl': d.sigO_cl, 'Cs': d.sigO_cs}
+    stdO_dict={'nee': d.sigO_nee, 'lf': d.sigO_lf, 'lw': d.sigO_lw, \
+               'cf': d.sigO_cf, 'cr': d.sigO_cr, 'cw': d.sigO_cw, \
+               'cl': d.sigO_cl, 'cs': d.sigO_cs}
 
-    Obslist=re.findall(r'[^,;\s]+', obs)
+    Obslist=re.findall(r'[^,;\s]+', obs_str)
     
     sigO=[-9999]*len(Obslist)
 
@@ -66,11 +66,11 @@ def Rmat(d,i,j,obs):
     return R
       
     
-def SIC(d,i,j,obs,Mlist): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A|), measure of reduction in entropy given a set of observations)
+def SIC(d,i,j,obs_str,Mlist): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A|), measure of reduction in entropy given a set of observations)
     
-    H=Hmat(d,i,j,obs,Mlist)
+    H=Hmat(d,i,j,obs_str,Mlist)
     
-    R=Rmat(d,i,j,obs)
+    R=Rmat(d,i,j,obs_str)
     	
     B=d.B #Background error covariance matrix
 
@@ -81,8 +81,8 @@ def SIC(d,i,j,obs,Mlist): #Calculates value of Shannon Info Content (SIC=0.5*ln(
     return SIC	
 
 
-def DOFS(d,i,j,obs):
-    H=Hmat(d,i,j,obs)
+def DOFS(d,i,j,obs,Mlist):
+    H=Hmat(d,i,j,obs,Mlist)
     R=Rmat(d,i,j,obs)
     B=d.B
     A=(B.I+H.T*R.I*H).I
