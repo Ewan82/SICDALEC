@@ -57,8 +57,8 @@ def PlotsuccDOFS(d, i, j, obs):
 
     plt.plot(Xlist,DOFSlist)
     plt.xlabel('Day of observation', fontsize=20)
-    plt.ylabel('DOFS', fontsize=20)
-    plt.title('DOFS varying with successive observations of '+obs, fontsize=20)
+    plt.ylabel('Degrees of freedom for signal', fontsize=20)
+    plt.title('DFS varying with successive observations', fontsize=20)
     
     
 def PlotoneDOFS(d, i, j, obs):
@@ -70,9 +70,9 @@ def PlotoneDOFS(d, i, j, obs):
         DOFSlist[x-i] = SIC.DOFS(d,x,x+1,obs,Mlist)
 
     plt.plot(Xlist, DOFSlist)
-    plt.xlabel('Day of observation of NEE', fontsize=20)
-    plt.ylabel('DOFS', fontsize=20)
-    plt.title('DOFS for a single observation of NEE', fontsize=20)
+    plt.xlabel('Day of observation', fontsize=20)
+    plt.ylabel('Degrees of freedom for signal', fontsize=20)
+    plt.title('DFS for a single observation of NEE', fontsize=20)
     plt.show()
 
     
@@ -180,5 +180,5 @@ def PlotwintsummDOFs(d,i,j,obs):
     plt.plot(xlist, sumsiclist, '--', label='single summer obs')
     plt.xlabel('Day', fontsize=20)
     plt.ylabel('Degrees of Freedom for Signal', fontsize=20)
-    plt.title('DOFS for NEE winter and summer', fontsize=20)
+    plt.title('DFS for NEE winter and summer', fontsize=20)
     plt.legend(loc='upper left')
