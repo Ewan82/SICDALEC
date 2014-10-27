@@ -55,10 +55,11 @@ def PlotsuccDOFS(d, i, j, obs):
     for x in xrange(i,j):
          DOFSlist[x-i] = SIC.DOFS(d,i,x+1,obs,Mlist)
 
-    plt.plot(Xlist,DOFSlist)
-    plt.xlabel('Day of observation', fontsize=20)
-    plt.ylabel('Degrees of freedom for signal', fontsize=20)
-    plt.title('DFS varying with successive observations', fontsize=20)
+    plt.plot(Xlist,DOFSlist, label=obs)
+    plt.legend(loc='lower right')
+    #plt.xlabel('Day of observation', fontsize=20)
+    plt.ylabel('DFS', fontsize=25)
+    #plt.title('DFS varying with successive observations', fontsize=20)
     
     
 def PlotoneDOFS(d, i, j, obs):
@@ -133,10 +134,11 @@ def Subplot_DOFS(d, i, j):
     PlotsuccDOFS(d, i, j, 'cl')
     plt.subplot(3,2,5)
     PlotsuccDOFS(d, i, j, 'cw')
-    plt.xlabel('Day of observation')
+    plt.xlabel('Day of observation', fontsize=25)
     plt.subplot(3,2,6)
     PlotsuccDOFS(d, i, j, 'nee')
-    plt.xlabel('Day of observation')
+    plt.xlabel('Day of observation', fontsize=25)
+    plt.suptitle('DFS varying with successive observations', fontsize=25)
     plt.show()
 
     
