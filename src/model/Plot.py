@@ -4,28 +4,29 @@ import Model as Mod
 import copy as cp
 import matplotlib.pyplot as plt
 
+
 def PlotsuccSIC(d,i,j,obs):
-    Mlist=Mod.Mlist(d,i,j)
-    Xlist=np.arange(i,j,1)
-    SIClist=np.ones(j-i)*-9999
+    Mlist = Mod.Mlist(d,i,j)
+    Xlist = np.arange(i,j,1)
+    SIClist = np.ones(j-i)*-9999
+    
     for x in xrange(i,j):
          SIClist[x-i]=SIC.SIC(d,i,x+1,obs,Mlist)
 
-    plt.plot(Xlist,SIClist)
-    plt.xlabel('Day of observation')
-    plt.ylabel('Shannon Information Content')
-    plt.title('SIC varying with successive observations')
+    plt.plot(Xlist, SIClist)
+    plt.xlabel('Day of observation', fontsize=20)
+    plt.ylabel('Shannon Information Content', fontsize=20)
+    plt.title('SIC varying with successive observations', fontsize=20)
     plt.show()
  
    
 def PlotoneSIC(d,i,j,obs):
-    Mlist=Mod.Mlist(d,i,j)
-    Xlist=np.arange(i,j,1)
-    SIClist=[-9999]*(j-i)
+    Mlist = Mod.Mlist(d,i,j)
+    Xlist = np.arange(i,j,1)
+    SIClist = np.ones(j-i)*-9999.
+    
     for x in xrange(i,j):
-        SIClist[x-i]=SIC.SIC(d,x,x+1,obs,Mlist)
-        
-    #y=[sum(SIClist[:i+1]) for i in range(len(SIClist))]
+        SIClist[x-i] = SIC.SIC(d, x, x+1, obs, Mlist)
 
     plt.plot(Xlist,SIClist)
     plt.xlabel('Day of observation of NEE', fontsize=20)
@@ -35,11 +36,10 @@ def PlotoneSIC(d,i,j,obs):
 
 
 def Plottemp(d,i,j):
-    Xlist=np.arange(i,j,1)
+    Xlist = np.arange(i,j,1)
     Tlist = d.T[i:j]
-    #y=[sum(SIClist[:i+1]) for i in range(len(SIClist))]
 
-    plt.plot(Xlist,Tlist)
+    plt.plot(Xlist, Tlist)
     plt.xlabel('Day of observation of Temperature', fontsize=20)
     plt.ylabel(r'Temperature term, $\frac{1}{2}exp(\Theta T_{mean})$',\
                fontsize=20)
@@ -47,17 +47,33 @@ def Plottemp(d,i,j):
     plt.show()
     
     
-def PlotsuccDOFS(d,i,j,obs):
-    Mlist=Mod.Mlist(d,i,j)
-    Xlist=np.arange(i,j,1)
-    DOFSlist=[-9999]*(j-i)
+def PlotsuccDOFS(d, i, j, obs):
+    Mlist = Mod.Mlist(d, i, j)
+    Xlist = np.arange(i, j, 1)
+    DOFSlist = np.ones(j-i)*-9999.
+    
     for x in xrange(i,j):
-         DOFSlist[x-i]=SIC.DOFS(d,i,x+1,obs,Mlist)
+         DOFSlist[x-i] = SIC.DOFS(d,i,x+1,obs,Mlist)
 
     plt.plot(Xlist,DOFSlist)
-    #plt.xlabel('Day of observation')
-    plt.ylabel('DOFS')
-    plt.title('DOFS varying with successive observations of '+obs)
+    plt.xlabel('Day of observation', fontsize=20)
+    plt.ylabel('DOFS', fontsize=20)
+    plt.title('DOFS varying with successive observations of '+obs, fontsize=20)
+    
+    
+def PlotoneDOFS(d, i, j, obs):
+    Mlist = Mod.Mlist(d, i, j)
+    Xlist = np.arange(i, j, 1)
+    DOFSlist = np.ones(j-i)*-9999.
+    
+    for x in xrange(i, j):
+        DOFSlist[x-i] = SIC.DOFS(d,x,x+1,obs,Mlist)
+
+    plt.plot(Xlist, DOFSlist)
+    plt.xlabel('Day of observation of NEE', fontsize=20)
+    plt.ylabel('DOFS', fontsize=20)
+    plt.title('DOFS for a single observation of NEE', fontsize=20)
+    plt.show()
 
     
 def PlotLinModerr(d, i, j, Cpool):
@@ -122,3 +138,47 @@ def Subplot_DOFS(d, i, j):
     PlotsuccDOFS(d, i, j, 'nee')
     plt.xlabel('Day of observation')
     plt.show()
+
+    
+def PlotsuccSIClist(d,i,j,obs):
+    Mlist = Mod.Mlist(d, i, j)
+    SIClist = np.ones(j-i)*-9999.
+    
+    for x in xrange(i,j):
+         SIClist[x-i] = SIC.SIC(d, i, x+1, obs, Mlist)
+    return SIClist
+    
+    
+def PlotsuccDOFSlist(d,i,j,obs):
+    Mlist = Mod.Mlist(d, i, j)
+    DOFSlist = np.ones(j-i)*-9999.
+    
+    for x in xrange(i, j):
+         DOFSlist[x-i] = SIC.DOFS(d, i, x+1, obs, Mlist)
+    return DOFSlist
+    
+    
+def Plotwintsumm(d, i, j, obs):
+    Mlist = Mod.Mlist(d, i , j)
+    xlist = np.arange(0, j-i, 1)
+    sumsiclist = np.ones(j-i)*SIC.SIC(d, 923, 924, obs, Mlist)
+    wint = PlotsuccSIClist(d, i, j, obs)
+    plt.plot(xlist, wint, label='successive winter obs')    
+    plt.plot(xlist, sumsiclist, '--', label='single summer obs')
+    plt.xlabel('Day', fontsize=20)
+    plt.ylabel('Shannon Information Content', fontsize=20)
+    plt.title('SIC for NEE winter and summer', fontsize=20)
+    plt.legend(loc='upper left')
+    
+    
+def PlotwintsummDOFs(d,i,j,obs):
+    Mlist = Mod.Mlist(d, i , j)
+    xlist = np.arange(0, j-i, 1)
+    sumsiclist = np.ones(j-i)*SIC.DOFS(d, 923, 924, obs, Mlist)
+    wint = PlotsuccDOFSlist(d, i, j, obs)
+    plt.plot(xlist, wint, label='successive winter obs')    
+    plt.plot(xlist, sumsiclist, '--', label='single summer obs')
+    plt.xlabel('Day', fontsize=20)
+    plt.ylabel('Degrees of Freedom for Signal', fontsize=20)
+    plt.title('DOFS for NEE winter and summer', fontsize=20)
+    plt.legend(loc='upper left')
