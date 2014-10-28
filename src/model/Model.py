@@ -94,9 +94,8 @@ def Clist(d,i,j): #Produces a list of carbon pool values and tangent linear matr
     return Clist
 
 
-def Clist_lin(d,i,j):
+def Clist_lin(d, i, j, Matlist):
     Clist = np.concatenate((d.Clist, np.ones((j - i,5))*-9999.))
-    Matlist = Mlist(d,i,j)
     for x in xrange(i, j):
         Clist[x-i+1] = (Matlist[x-i]*np.matrix(Clist[x-i]).T).T
     return Clist

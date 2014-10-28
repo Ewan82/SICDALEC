@@ -90,7 +90,8 @@ def PlotLinModerr(d, i, j, Cpool):
 
     d3 = cp.copy(d)
     d3.Clist = d3.Clist*0.1
-    dxL = Mod.Clist_lin(d3, i, j)
+    Matlist = Mod.Mlist(d, i, j)
+    dxL = Mod.Clist_lin(d3, i, j, Matlist)
 
     dxN = Clistxdx - Clistx
 
@@ -110,11 +111,9 @@ def Subplot_err(d, i, j):
     plt.title('Plot of dxN and dxL')
     plt.subplot(3,2,3) 
     PlotLinModerr(d, i, j, 'cs')
-    plt.xlabel('Day of model run')
     plt.ylabel('Carbon pool value') 
     plt.subplot(3,2,4)
     PlotLinModerr(d, i, j, 'cl')
-    plt.xlabel('Day of model run')
     plt.subplot(3,1,3)
     PlotLinModerr(d, i, j, 'cw')
     plt.xlabel('Day of model run')
