@@ -85,40 +85,51 @@ def PlotLinModerr(d, i, j, Cpool):
     Clistx = Mod.Clist(d, i, j)
 
     d2 = cp.copy(d)
-    d2.Clist = d2.Clist*1.1
+    d2.Clist = d2.Clist*1.05
     Clistxdx = Mod.Clist(d2, i, j)
 
     d3 = cp.copy(d)
-    d3.Clist = d3.Clist*0.1
+    d3.Clist = d3.Clist*0.05
     Matlist = Mod.Mlist(d, i, j)
     dxL = Mod.Clist_lin(d3, i, j, Matlist)
 
-    dxN = Clistxdx - Clistx
+    #dxN = Clistxdx - Clistx
+    
+    err = abs(((Clistxdx - Clistx)/dxL)-1)*100
 
-    plt.plot(Xlist, dxN[:,pooldict[Cpool]], label='dxN '+Cpool)
-    plt.plot(Xlist, dxL[:,pooldict[Cpool]], label='dxL '+Cpool)
-    plt.legend()
+    plt.plot(Xlist, err[:,pooldict[Cpool]], label=Cpool)
+    #plt.plot(Xlist, dxN[:,pooldict[Cpool]], label='dxN '+Cpool)
+    #plt.plot(Xlist, dxL[:,pooldict[Cpool]], label='dxL '+Cpool)
+    plt.legend(loc='upper left')
     #plt.show()
     
     
 def Subplot_err(d, i, j):
-    plt.subplot(3,2,1)
+    plt.subplot(3,2,1)   
     PlotLinModerr(d, i, j, 'cf')
-    plt.ylabel('Carbon pool value')
-    plt.title('Plot of dxN and dxL')
+    plt.ylabel('Error (%)', fontsize=20)
+    #plt.title('Plot of dxN and dxL')
+    #plt.legend()
     plt.subplot(3,2,2) 
     PlotLinModerr(d, i, j, 'cr')
-    plt.title('Plot of dxN and dxL')
+    #plt.title('Plot of dxN and dxL')
+    #plt.legend()
     plt.subplot(3,2,3) 
     PlotLinModerr(d, i, j, 'cs')
-    plt.ylabel('Carbon pool value') 
+    plt.ylabel('Error (%)', fontsize=20)
+    #plt.legend()
     plt.subplot(3,2,4)
     PlotLinModerr(d, i, j, 'cl')
+    #plt.legend()
     plt.subplot(3,1,3)
     PlotLinModerr(d, i, j, 'cw')
-    plt.xlabel('Day of model run')
-    plt.ylabel('Carbon pool value')
-    plt.title('Plot of dxN and dxL') 
+    plt.xlabel('Day of model run',fontsize=20)
+    plt.ylabel('Error (%)',fontsize=20)
+    plt.suptitle(r"Plot of $ (\frac{m( \mathbf{x} + \delta \mathbf{x})"
+                 r"-m(\mathbf{x})}{\mathbf{M}\delta\mathbf{x}}-1) \times"
+                 r"100$ for each carbon pool", fontsize=20) 
+    #plt.legend(loc='lower right')
+    #plt.suptitle(r'Plot of $\bigg(\frac{m(\mathbf{x}+\delta\mathbf{x})-m(\mathbf{x})}{\mathbf{M}\delta\mathbf{x}}-1\bigg)\times 100$ for each carbon pool', fontsize=20)    
     plt.show()
 
 

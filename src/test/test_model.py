@@ -16,19 +16,19 @@ def test_gpp_derivative():
     datx = D.dalecData(1096)
     datdx = D.dalecData(1096)
     datdx.Cf = datdx.Cf*0.1
-    lam = 0.01
+    lam = 0.00001
     mxdxgpp = M.GPP(datx.Cf+lam*datdx.Cf, datx, 0)
     mxgpp = M.GPP(datx.Cf, datx, 0)
     Mgpp = M.GPPdiff(datx.Cf, datx, 0)    
     print abs((mxdxgpp-mxgpp)/(Mgpp*lam*datdx.Cf)-1)
-    assert abs(((mxdxgpp-mxgpp) / (Mgpp*lam*datdx.Cf))-1) < 1e-5
+    assert abs(((mxdxgpp-mxgpp) / (Mgpp*lam*datdx.Cf))-1) < 1e-7
     
     
 def test_lin_model():
     datx = D.dalecData(1096)
     datdx = D.dalecData(1096)
     datxdx = D.dalecData(1096)
-    lam = 0.1
+    lam = 0.0001
     datdx.Clist = lam*0.1*datdx.Clist
     datxdx.Clist = datxdx.Clist+lam*0.1*datxdx.Clist
     mxdxgpp = M.Clist(datxdx, 0, 10)
@@ -38,4 +38,4 @@ def test_lin_model():
     print abs(np.linalg.norm(mxdxgpp[10]-mxgpp[10]) /  \
               np.linalg.norm(Mgpp[10]) - 1)
     assert abs((np.linalg.norm(mxdxgpp[10]-mxgpp[10]) / \
-                np.linalg.norm(Mgpp[10]))-1) < 1e-9
+                np.linalg.norm(Mgpp[10]))-1) < 1e-7
