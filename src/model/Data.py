@@ -8,7 +8,7 @@ class dalecData( ):
         
         #Extract the data
         self.homepath = os.path.expanduser("~")
-        self.f = open(self.homepath+"/SICDALEC/data/dalec_drivers.txt","r")
+        self.f = open(self.homepath+"/projects/SICDALEC/data/dalec_drivers.txt","r")
         self.allLines = self.f.readlines()
         self.lenrun = lenrun
         self.startrun = startrun
