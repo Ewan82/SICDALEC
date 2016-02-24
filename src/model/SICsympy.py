@@ -1,6 +1,7 @@
 import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def SIC():
     sigCfb,sigCrb,sigCwb,sigClb,sigCsb,sigCfo,dGPPCf,T,p1,p2,p3,p4,p5,p6,p7,p8,p9=sp.symbols("sigCfb sigCrb sigCwb sigClb sigCsb sigCfo dGPP T p1 p2 p3 p4 p5 p6 p7 p8 p9")
@@ -117,22 +118,24 @@ def hmat_ob(obs):
 
     H = sp.Matrix([H_lst[0],H_lst[1]*M_lst[0],H_lst[2]*M_lst[1]*M_lst[0],H_lst[3]*M_lst[2]*M_lst[1]*M_lst[0],
                    H_lst[4]*M_lst[3]*M_lst[2]*M_lst[1]*M_lst[0]])
-    return H.rank()
+    return H.rref(simplify=True)
 
 def plot_observability(obslist):
+    sns.set(style="whitegrid")
+    sns.set_context('paper', font_scale=1.2)
     n = len(obslist)
     width = 0.35
     ind = np.arange(n)
     fig = plt.figure(figsize=(6,8))
     ax = fig.add_subplot(111)
-    hmat_lst = [hmat_ob(obslist[x]) for x in range(len(obslist))]
+    # hmat_lst = [hmat_ob(obslist[x]) for x in range(len(obslist))]
     # values = [x.rank(simplify=True) for x in hmat_lst]
     values = [1, 1, 2, 2, 3, 5, 5, 5]
     ax.bar(ind, values, width, color='g')
     ax.set_ylabel(r'Rank of $\hat{\bf{H}}$')
     ax.set_title('Observability')
     ax.set_xticks(ind)
-    ax.set_yticks(np.arange(24))
+    ax.set_yticks(np.arange(6))
     keys = ['LAI', r'$C_f$', r'$C_r$', r'$C_w$', r'$C_l$', r'$C_s$', 'NEE', 'ground resp']
     ax.set_xticklabels(keys, rotation=45)
-    return ax, fig, hmat_lst
+    return ax, fig, # hmat_lst
