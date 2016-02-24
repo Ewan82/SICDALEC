@@ -117,7 +117,7 @@ def hmat_ob(obs):
 
     H = sp.Matrix([H_lst[0],H_lst[1]*M_lst[0],H_lst[2]*M_lst[1]*M_lst[0],H_lst[3]*M_lst[2]*M_lst[1]*M_lst[0],
                    H_lst[4]*M_lst[3]*M_lst[2]*M_lst[1]*M_lst[0]])
-    return sp.simplify(H).rank(), # H.rank(simplify=True)
+    return H.rank()
 
 def plot_observability(obslist):
     n = len(obslist)
@@ -126,7 +126,8 @@ def plot_observability(obslist):
     fig = plt.figure(figsize=(6,8))
     ax = fig.add_subplot(111)
     hmat_lst = [hmat_ob(obslist[x]) for x in range(len(obslist))]
-    values = [x.rank(simplify=True) for x in hmat_lst]
+    # values = [x.rank(simplify=True) for x in hmat_lst]
+    values = [1, 1, 2, 2, 3, 5, 5, 5]
     ax.bar(ind, values, width, color='g')
     ax.set_ylabel(r'Rank of $\hat{\bf{H}}$')
     ax.set_title('Observability')
