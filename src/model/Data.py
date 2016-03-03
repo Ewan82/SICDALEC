@@ -47,6 +47,8 @@ class dalecData( ):
         self.sigO_nee = 0.5**2 #(gCm-2day-1)**2
         self.sigO_lf = 0.2**2
         self.sigO_lw = 0.2**2
+        self.sigO_lai = 0.5**2
+        self.sigO_g_resp = 0.5**2
         
         #'Daily temperatures degC'
         self.T_mean = self.data[:,1].tolist()*k

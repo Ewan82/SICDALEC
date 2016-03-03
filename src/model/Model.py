@@ -54,7 +54,7 @@ def DALEC(Cf, Cr, Cw, Cl, Cs, x, d): #DALEC evergreen model equations
     Cr2 = (1-d.p_7)*Cr + d.p_4*(1-d.p_3)*(1-d.p_2)*GPPval
     Cw2 = (1-d.p_6)*Cw + (1-d.p_4)*(1-d.p_3)*(1-d.p_2)*GPPval    
     Cl2 = (1-(d.p_1 + d.p_8)*d.T[x])*Cl + d.p_5*Cf + d.p_7*Cr
-    Cs2 = (1 - d.p_9*d.T[x])*Cs + d.p_6*Cw + d.p_1*d.T[x]*Cr    
+    Cs2 = (1 - d.p_9*d.T[x])*Cs + d.p_6*Cw + d.p_1*d.T[x]*Cl
     return np.array([Cf2, Cr2, Cw2, Cl2, Cs2])
  
     

@@ -85,8 +85,8 @@ def hmat_ob(obs):
     p9, p10, p11, p12, clma = sp.symbols("dgpp1 dgpp2 dgpp3 dgpp4 dgpp5 dgpp6 T1 T2 T3 T4 T5 T6 p1 p2 p3 p4 p5 p6 "
                                          "p7 p8 p9 p10 p11 p12 clma")
     # gpp and temperatures at different times
-    gpp_lst = [dgppcf1, dgppcf2, dgppcf3, dgppcf4, dgppcf5] #, dgppcf6]
-    t_lst = [T1, T2, T3, T4, T5] #, T6]
+    gpp_lst = [dgppcf1, dgppcf2, dgppcf3, dgppcf4, dgppcf5, dgppcf6]
+    t_lst = [T1, T2, T3, T4, T5, T6]
     # Empty lists to be filled
     H_lst = []
     M_lst = []
@@ -116,13 +116,34 @@ def hmat_ob(obs):
                      [p5,p7,0,(1-(p1+p8)*t_lst[x]),0],
                      [0,0,p6,p1*t_lst[x],(1-p9*t_lst[x])]]))
 
-    H = sp.Matrix([H_lst[0],H_lst[1]*M_lst[0],H_lst[2]*M_lst[1]*M_lst[0],H_lst[3]*M_lst[2]*M_lst[1]*M_lst[0],
-                   H_lst[4]*M_lst[3]*M_lst[2]*M_lst[1]*M_lst[0]])
-    return H.rref(simplify=True)
+    # H = sp.Matrix([H_lst[0], H_lst[1]*M_lst[0], H_lst[2]*M_lst[1]*M_lst[0], H_lst[3]*M_lst[2]*M_lst[1]*M_lst[0],
+    #               H_lst[4]*M_lst[3]*M_lst[2]*M_lst[1]*M_lst[0],
+    #               H_lst[5]*M_lst[4]*M_lst[3]*M_lst[2]*M_lst[1]*M_lst[0]])
+    H = sp.Matrix([H_lst[0], H_lst[1]*M_lst[0]])
+    return H
+
+
+def sic_ob(obs):
+    sigcfb, sigcrb, sigcwb, sigclb, sigcsb, sigo_11, sigo_22, sigo_12, sigo_21 = sp.symbols("sigcfb sigcrb sigcwb "
+                                                                                            "sigclb sigcsb sigo_11 "
+                                                                                            "sigo_22 sigo_12 sigo_21")
+
+    B = sp.Matrix([[sigcfb**2, 0, 0, 0, 0], [0, sigcrb**2, 0, 0, 0], [0, 0, sigcwb**2, 0, 0],
+                   [0, 0, 0, sigclb**2, 0], [0, 0, 0, 0, sigcsb**2]])
+
+    H = hmat_ob(obs)
+
+    # R = sigo_11**2 * sp.eye(H.shape[0])
+    R = sp.Matrix([[sigo_11, sigo_12], [sigo_21, sigo_22]])
+
+    J2d = B**(-1) + H.T * (R**(-1)) * H
+
+    return sp.simplify(J2d.det() * (B).det()), R
+
 
 def plot_observability(obslist):
     sns.set(style="whitegrid")
-    sns.set_context('paper', font_scale=1.2)
+    sns.set_context('paper', font_scale=1.4)
     n = len(obslist)
     width = 0.35
     ind = np.arange(n)
@@ -133,9 +154,9 @@ def plot_observability(obslist):
     values = [1, 1, 2, 2, 3, 5, 5, 5]
     ax.bar(ind, values, width, color='g')
     ax.set_ylabel(r'Rank of $\hat{\bf{H}}$')
-    ax.set_title('Observability')
+    # ax.set_title('Observability')
     ax.set_xticks(ind)
     ax.set_yticks(np.arange(6))
-    keys = ['LAI', r'$C_f$', r'$C_r$', r'$C_w$', r'$C_l$', r'$C_s$', 'NEE', 'ground resp']
+    keys = ['LAI', r'$C_{fol}$', r'$C_{roo}$', r'$C_{woo}$', r'$C_{lit}$', r'$C_{som}$', 'NEE', 'ground resp']
     ax.set_xticklabels(keys, rotation=45)
     return ax, fig, # hmat_lst
