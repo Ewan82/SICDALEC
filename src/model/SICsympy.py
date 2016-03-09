@@ -110,7 +110,12 @@ def hmat_ob(obs):
         if obs == 'lit_resp':
             H_lst.append(sp.Matrix([[0, 0, 0, p8*t_lst[x], 0]]))
 
-        M_lst.append(sp.Matrix([[(1-p5)+p3*(1-p2)*gpp_lst[x],0,0,0,0],
+        #M_lst.append(sp.Matrix([[(1-p5)+p3*(1-p2)*gpp_lst[x],0,0,0,0],
+        #             [p4*(1-p3)*(1-p2)*gpp_lst[x],(1-p7),0,0,0],
+        #             [(1-p4)*(1-p3)*(1-p2)*gpp_lst[x],0,(1-p6),0,0],
+        #             [p5,p7,0,(1-(p1+p8)*t_lst[x]),0],
+        #             [0,0,p6,p1*t_lst[x],(1-p9*t_lst[x])]]))
+        M_lst.append(sp.Matrix([[gpp_lst[x],0,0,0,0],
                      [p4*(1-p3)*(1-p2)*gpp_lst[x],(1-p7),0,0,0],
                      [(1-p4)*(1-p3)*(1-p2)*gpp_lst[x],0,(1-p6),0,0],
                      [p5,p7,0,(1-(p1+p8)*t_lst[x]),0],
@@ -120,25 +125,38 @@ def hmat_ob(obs):
     #               H_lst[4]*M_lst[3]*M_lst[2]*M_lst[1]*M_lst[0],
     #               H_lst[5]*M_lst[4]*M_lst[3]*M_lst[2]*M_lst[1]*M_lst[0]])
     H = sp.Matrix([H_lst[0], H_lst[1]*M_lst[0]])
-    return H
+    return H_lst[0]
 
 
 def sic_ob(obs):
-    sigcfb, sigcrb, sigcwb, sigclb, sigcsb, sigo_11, sigo_22, sigo_12, sigo_21 = sp.symbols("sigcfb sigcrb sigcwb "
+    sigcfb, sigcrb, sigcwb, sigclb, sigcsb, sigo_11, sigo_22, sigo_12, sigo_21, a, T, p8, p9 = sp.symbols("sigcfb "
+                                                                                            "sigcrb sigcwb "
                                                                                             "sigclb sigcsb sigo_11 "
-                                                                                            "sigo_22 sigo_12 sigo_21")
+                                                                                            "sigo_22 sigo_12 sigo_21 "
+                                                                                            "a T p8 p9")
+
 
     B = sp.Matrix([[sigcfb**2, 0, 0, 0, 0], [0, sigcrb**2, 0, 0, 0], [0, 0, sigcwb**2, 0, 0],
                    [0, 0, 0, sigclb**2, 0], [0, 0, 0, 0, sigcsb**2]])
 
+    Jdd = sp.Matrix([[sigcfb**-2+(sigo_11**-2)*a**2, 0, 0, sigo_11**-2 * a*p8*T, sigo_11**-2 *a *p9*T],
+                     [0, sigcrb**-2, 0, 0, 0],
+                     [0, 0, sigcwb**-2, 0, 0],
+                     [sigo_11**-2 *a*p8*T, 0, 0, sigclb**-2 +sigo_11**-2*p8**2*T**2, sigo_11**-2*p8*p9*T**2],
+                     [sigo_11**-2*a*p9*T, 0, 0, sigo_11**-2*p8*p9*T**2, sigcsb**-2+sigo_11**-2*p9**2*T**2]])
+
     H = hmat_ob(obs)
 
-    # R = sigo_11**2 * sp.eye(H.shape[0])
-    R = sp.Matrix([[sigo_11, sigo_12], [sigo_21, sigo_22]])
+    R = sigo_11**2 * sp.eye(H.shape[0])
+    # R = sp.Matrix([[sigo_11, sigo_12], [sigo_21, sigo_22]])
 
     J2d = B**(-1) + H.T * (R**(-1)) * H
 
-    return sp.simplify(J2d.det() * (B).det()), R
+    sic = J2d.det() * (B).det()
+
+    dfs = 5 - sp.trace(B.inv()*J2d.inv())
+
+    return sp.simplify(sic), sp.simplify(dfs)
 
 
 def plot_observability(obslist):
@@ -160,3 +178,14 @@ def plot_observability(obslist):
     keys = ['LAI', r'$C_{fol}$', r'$C_{roo}$', r'$C_{woo}$', r'$C_{lit}$', r'$C_{som}$', 'NEE', 'ground resp']
     ax.set_xticklabels(keys, rotation=45)
     return ax, fig, # hmat_lst
+
+def fiveinv():
+    a11, a14, a15, a22, a33, a41, a44, a45, a51, a54, a55 = sp.symbols("a11 a14 a15 a22 a33 a41 a44 a45 "
+                                                                       "a51 a54 a55")
+    d2J = sp.Matrix([[a11, 0, 0, a14, a14],
+                     [0, a22, 0, 0, 0],
+                     [0, 0, a33, 0, 0],
+                     [a41, 0, 0, a44, a45],
+                     [a51, 0, 0, a54, a55]])
+
+    return d2J
