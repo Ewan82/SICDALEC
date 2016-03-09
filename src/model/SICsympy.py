@@ -154,7 +154,7 @@ def sic_ob(obs):
 
     sic = J2d.det() * (B).det()
 
-    dfs = 5 - sp.trace(B.inv()*J2d.inv())
+    dfs = 5 - (B.inv()*J2d.inv()).trace()
 
     return sp.simplify(sic), sp.simplify(dfs)
 
