@@ -2,6 +2,9 @@ import numpy as np
 import SIC as SIC
 import Model as Mod
 import copy as cp
+import seaborn as sns
+import datetime as dt
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 
 
@@ -20,33 +23,88 @@ def PlotsuccSIC(d,i,j,obs):
     plt.show()
  
    
-def PlotoneSIC(d,i,j,obs):
-    Mlist = Mod.Mlist(d,i,j)
-    Xlist = np.arange(i,j,1)
+def Plot_one_SIC(d, i, j, obs, yr=2007):
+    sns.set(style="ticks")
+    sns.set_context('paper', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
+    fig = plt.figure(figsize=(6, 8))
+    ax = fig.add_subplot(111)
+    Mlist = Mod.Mlist(d, i, j)
+    Xlist = np.arange(i, j, 1)
     SIClist = np.ones(j-i)*-9999.
     
-    for x in xrange(i,j):
+    for x in xrange(i, j):
         SIClist[x-i] = SIC.SIC(d, x, x+1, obs, Mlist)
 
-    plt.plot(Xlist,SIClist)
-    plt.xlabel('Day of observation of NEE', fontsize=20)
-    plt.ylabel('Shannon Information Content', fontsize=20)
-    plt.title('SIC for a single observation of NEE', fontsize=20)
-    plt.show()
+    datum = dt.datetime(int(yr), 1, 1)
+    delta = dt.timedelta(hours=24)
+    # Convert the time values to datetime objects
+    times = []
+    for t in Xlist:
+        times.append(datum + int(t) * delta)
+    ax.plot(times, SIClist)
+
+    plt.xlabel('Date')
+    plt.ylabel('Shannon information content')
+    myFmt = mdates.DateFormatter('%b')  # format x-axis time to display just month
+    ax.xaxis.set_major_formatter(myFmt)
+    # plt.title('SIC for a single observation of NEE', fontsize=20)
+    # plt.show()
+    return ax, fig
 
 
-def Plottemp(d,i,j):
+def plot_temp(d, i, j, yr=2007):
+    sns.set(style="ticks")
+    sns.set_context('paper', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
+    fig = plt.figure(figsize=(6, 8))
+    ax = fig.add_subplot(111)
     Xlist = np.arange(i,j,1)
-    Tlist = d.T[i:j]
+    Tlist = 2*np.array(d.T[i:j])
 
-    plt.plot(Xlist, Tlist)
-    plt.xlabel('Day of observation of Temperature', fontsize=20)
-    plt.ylabel(r'Temperature term, $\frac{1}{2}exp(\Theta T_{mean})$',\
-               fontsize=20)
-    plt.title('Temperature term for three years of data', fontsize=20)
-    plt.show()
-    
-    
+    datum = dt.datetime(int(yr), 1, 1)
+    delta = dt.timedelta(hours=24)
+    # Convert the time values to datetime objects
+    times = []
+    for t in Xlist:
+        times.append(datum + int(t) * delta)
+
+    ax.plot(times, Tlist)
+
+    plt.xlabel('Date')
+    plt.ylabel('Temperature term',)
+    # plt.title('Temperature term for three years of data')
+    myFmt = mdates.DateFormatter('%b')  # format x-axis time to display just month
+    ax.xaxis.set_major_formatter(myFmt)
+    # plt.show()
+    return ax, fig
+
+
+def plot_obs(d, i, j, ob_str, yr=2007):
+    sns.set(style="ticks")
+    sns.set_context('paper', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
+    fig = plt.figure(figsize=(6, 8))
+    ax = fig.add_subplot(111)
+    Xlist = np.arange(i,j,1)
+    Tlist = 2*np.array(d.T[i:j])
+    ob_list = np.array(Mod.ob_list(d, i, j, ob_str))
+
+    datum = dt.datetime(int(yr), 1, 1)
+    delta = dt.timedelta(hours=24)
+    # Convert the time values to datetime objects
+    times = []
+    for t in Xlist:
+        times.append(datum + int(t) * delta)
+
+    ax.plot(times, ob_list)
+
+    plt.xlabel('Date')
+    plt.ylabel(ob_str)
+    # plt.title('Temperature term for three years of data')
+    myFmt = mdates.DateFormatter('%b')  # format x-axis time to display just month
+    ax.xaxis.set_major_formatter(myFmt)
+    # plt.show()
+    return ax, fig
+
+
 def PlotsuccDOFS(d, i, j, obs):
     Mlist = Mod.Mlist(d, i, j)
     Xlist = np.arange(i, j, 1)

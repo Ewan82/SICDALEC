@@ -68,7 +68,7 @@ def LinDALEC(Cf, Cr, Cw, Cl, Cs, x, d): #Tangent Linear DALEC evergreen model
     M = np.matrix(ad.jacobian(Dalecoutput, [Cf, Cr, Cw, Cl, Cs]))    
     return Dalecoutput, M
 
-	
+
 def Mlist(d,i,j): #Produces a list of carbon pool values and tangent linear matrices between two times steps (i and j) using d.Clist as initial conditions.
     Clist = np.concatenate((d.Clist, np.ones((j - i,5))*-9999.))
     Matlist = np.ones((j - i,5,5))*-9999.
@@ -119,35 +119,59 @@ def Clist_lin2(d,i,j):
     return Clist
 
 
-#Observations:
-def NEE(Cf,Cr,Cw,Cl,Cs,x,d):
+def ob_list(d, i, j, ob_str):
+    obs_dict = {'nee': NEE, 'lf': LF, 'lw': LW, 'cf': Cf, 'cr': Cr,
+                'cw': Cw, 'cl': Cl, 'cs': Cs, 'diffGPP': difGPP}
+    c_list = Clist(d, i, j)
+    obs_list = []
+    x_list = np.arange(i, j , 1)
+    for x in x_list:
+        c = c_list[x]
+        obs_list.append(obs_dict[ob_str](c[0], c[1], c[2], c[3], c[4], x, d))
+
+    return obs_list
+
+
+# Observations:
+def difGPP(Cf, Cr, Cw, Cl, Cs, x, d):
+    diffGPP = GPPdiff(Cf, d, x)
+    return diffGPP
+
+def NEE(Cf, Cr, Cw, Cl, Cs, x, d):
     NEE = -(1-d.p_2)*GPP(Cf, d, x) + d.p_8*d.T[x]*Cl + d.p_9*d.T[x]*Cs    
     return NEE
+
 
 def LF(Cf,Cr,Cw,Cl,Cs,x,d):    
     LF = d.p_5*Cf
     return LF
-    
+
+
 def LW(Cf,Cr,Cw,Cl,Cs,x,d):
     LW = d.p_6*Cw
     return LW
-    
+
+
 def Cf(Cf,Cr,Cw,Cl,Cs,x,d):
     Cf = Cf
     return Cf
-    
+
+
 def Cr(Cf,Cr,Cw,Cl,Cs,x,d):
     Cr = Cr
     return Cr
-    
+
+
 def Cw(Cf,Cr,Cw,Cl,Cs,x,d):
     Cw = Cw
     return Cw
-    
+
+
 def Cl(Cf,Cr,Cw,Cl,Cs,x,d):
     Cl = Cl
     return Cl
-    
+
+
 def Cs(Cf,Cr,Cw,Cl,Cs,x,d):
     Cs = Cs
     return Cs    

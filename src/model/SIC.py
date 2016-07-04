@@ -15,6 +15,52 @@ def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
         return Mat
 
 
+def H(d, i, j, obs_str):
+    Hlist = [-9999]*(j-i)
+
+    Obslist = re.findall(r'[^,;\s]+', obs_str)
+
+    Hhold = [-9999]*len(Obslist)
+
+    obsdict = {'nee': Mod.NEE, 'lf': Mod.LF, 'lw': Mod.LW, 'cf': Mod.Cf, \
+               'cr': Mod.Cr, 'cw': Mod.Cw, 'cl': Mod.Cl, 'cs': Mod.Cs}
+
+    for x in xrange(i,j):
+        Cf = ad.adnumber(d.Cf) #Clist[x-i][0]) #Redo this!!!
+        Cr = ad.adnumber(d.Cr) #Clist[x-i][1])
+        Cw = ad.adnumber(d.Cw) #Clist[x-i][2])
+        Cl = ad.adnumber(d.Cl) #Clist[x-i][3])
+        Cs = ad.adnumber(d.Cs) #Clist[x-i][4])
+        for y in range(0,len(Obslist)):
+            Hhold[y] = ad.jacobian(obsdict[Obslist[y]](Cf,Cr,Cw,Cl,Cs,x,d),[Cf,Cr,Cw,Cl,Cs])
+        Hlist[x-i] = np.vstack(Hhold)
+    return np.vstack(Hlist)
+
+
+def SIC_1ob(d, i, j, obs_str): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A|), measure of reduction in entropy given a set of observations)
+
+    Hm = H(d, i, j, obs_str)
+
+    R = Rmat(d, i, j, obs_str)
+
+    B = d.B #Background error covariance matrix
+
+    J2nddiff = B.I + Hm.T*R.I*Hm #Calculates Hessian
+
+    SIC = 0.5*np.log((np.linalg.det(J2nddiff))*(np.linalg.det(B))) #Calculates SIC
+
+    return SIC
+
+
+def DOFS_1ob(d, i, j, obs):
+    Hm = H(d, i, j, obs,)
+    R = Rmat(d, i, j, obs)
+    B = d.B
+    A = (B.I + Hm.T*R.I*Hm).I
+    DOFS = len(d.Clist[0]) - np.trace(B.I*A)
+    return DOFS
+
+
 def Hmat(d,i,j,obs_str,Mlist): #Creates H^hat matrix for given obs, i,j and data d
   
     Hlist=[-9999]*(j-i) 
