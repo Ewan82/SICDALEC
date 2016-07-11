@@ -7,15 +7,15 @@ import Model as M
 
 
 def info_content(sic_dfs):
-    sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo, sigNEEo, dGPP, T, p1, p2, p3, p4, p5, p6, p7, p8, p9 = \
-        sp.symbols("sigCfb sigCrb sigCwb sigClb sigCsb sigCo sigNEEo dGPP T p1 p2 p3 p4 p5 p6 p7 p8 p9")
+    sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo1, sigCo2, sigNEEo, cor, dGPP, T, p1, p2, p3, p4, p5, p6, p7, p8, p9 = \
+        sp.symbols("sigCfb sigCrb sigCwb sigClb sigCsb sigCo1 sigCo2 sigNEEo cor dGPP T p1 p2 p3 p4 p5 p6 p7 p8 p9")
 
     B = sp.Matrix([[sigCfb, 0, 0, 0, 0], [0, sigCrb, 0, 0, 0], [0, 0, sigCwb, 0, 0],
                    [0, 0, 0, sigClb, 0], [0, 0, 0, 0, sigCsb]])
 
-    H0 = sp.Matrix([[0, 0, 0, 0, 1]])
-    # H0 = sp.Matrix([[-(1-p2)*dGPP, 0, 0, p8*T, p9*T]])
-    # H0 = sp.Matrix([[-(1-p2)*dGPPCf, 0, 0, p8*T, p9*T],
+    # H0 = sp.Matrix([[1, 0, 0, 0, 0]])
+    H0 = sp.Matrix([[-(1-p2)*dGPP, 0, 0, p8*T, p9*T]])
+    # H0 = sp.Matrix([[-(1-p2)*dGPP, 0, 0, p8*T, p9*T],
     #               [1., 0, 0, 0, 0]])
 
     M = sp.Matrix([[dGPP, 0, 0, 0, 0], [p4*(1-p3)*(1-p2)*dGPP, (1-p7), 0, 0, 0],
@@ -23,17 +23,17 @@ def info_content(sic_dfs):
                    [p5, p7, 0, (1-(p1+p8)*T), 0], [0, 0, p6, p1*T, (1-p9*T)]])
 
     # R = sp.Matrix([[sigCo**2, 0, 0, 0], [0, sigCo**2, 0, 0], [0, 0, sigCo**2, 0], [0, 0, 0, sigCo**2]])
-    R = sigCo
+    # R = sigCo
     # R = sigNEEo
-    # R = sp.Matrix([[sigNEEo**2, 0], [0, sigCo**2]])
+    R = sp.Matrix([[sigCo1**2, cor], [cor, sigCo1**2]])
 
-    # H = sp.Matrix([H0, H0*M, H0*M**2, H0*M**3])
-    H = sp.Matrix(H0)
+    H = sp.Matrix([H0, H0*M])
+    # H = sp.Matrix(H0)
 
     J2d = B**(-1) + H.T*(R**(-1))*H
     A = J2d**(-1)
     if sic_dfs == 'sic':
-        return (J2d.det())*(B.det())
+        return sp.simplify((J2d.det())*(B.det()))
     elif sic_dfs == 'dfs':
         return 5.-sp.simplify(sp.trace(B**(-1)*A))
 

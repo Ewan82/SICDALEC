@@ -8,26 +8,37 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 
 
-def PlotsuccSIC(d,i,j,obs):
+def PlotsuccSIC(d, i, j, obs, yr=2007):
+    sns.set(style="ticks")
+    sns.set_context('poster', font_scale=1.5, rc={'lines.linewidth': 2, 'lines.markersize': 6})
+    fig, ax = plt.subplots(nrows=1, ncols=1,)
     Mlist = Mod.Mlist(d,i,j)
     Xlist = np.arange(i,j,1)
     SIClist = np.ones(j-i)*-9999
+    palette = sns.color_palette("colorblind", 11)
     
-    for x in xrange(i,j):
-         SIClist[x-i]=SIC.SIC(d,i,x+1,obs,Mlist)
+    for x in xrange(i, j):
+         SIClist[x-i] = SIC.SIC(d, i, x+1, obs, Mlist)
 
-    plt.plot(Xlist, SIClist)
-    plt.xlabel('Day of observation', fontsize=20)
-    plt.ylabel('Shannon Information Content', fontsize=20)
-    plt.title('SIC varying with successive observations', fontsize=20)
-    plt.show()
+    datum = dt.datetime(int(yr), 1, 1)
+    delta = dt.timedelta(hours=24)
+    # Convert the time values to datetime objects
+    times = []
+    for t in Xlist:
+        times.append(datum + int(t) * delta)
+    ax.plot(times, SIClist, color=palette[0])
+
+    plt.xlabel('Date')
+    plt.ylabel('Shannon information content')
+    myFmt = mdates.DateFormatter('%b')  # format x-axis time to display just month
+    ax.xaxis.set_major_formatter(myFmt)
+    return ax, fig
  
    
 def Plot_one_SIC(d, i, j, obs, yr=2007):
     sns.set(style="ticks")
-    sns.set_context('paper', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
-    fig = plt.figure(figsize=(6, 8))
-    ax = fig.add_subplot(111)
+    sns.set_context('poster', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
+    fig, ax = plt.subplots(nrows=1, ncols=1,)
     Mlist = Mod.Mlist(d, i, j)
     Xlist = np.arange(i, j, 1)
     SIClist = np.ones(j-i)*-9999.
@@ -54,10 +65,9 @@ def Plot_one_SIC(d, i, j, obs, yr=2007):
 
 def plot_temp(d, i, j, yr=2007):
     sns.set(style="ticks")
-    sns.set_context('paper', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
-    fig = plt.figure(figsize=(6, 8))
-    ax = fig.add_subplot(111)
-    Xlist = np.arange(i,j,1)
+    sns.set_context('poster', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
+    fig, ax = plt.subplots(nrows=1, ncols=1,)
+    Xlist = np.arange(i, j, 1)
     Tlist = 2*np.array(d.T[i:j])
 
     datum = dt.datetime(int(yr), 1, 1)
@@ -105,19 +115,34 @@ def plot_obs(d, i, j, ob_str, yr=2007):
     return ax, fig
 
 
-def PlotsuccDOFS(d, i, j, obs):
+def PlotsuccDOFS(d, i, j, obs, yr=2007):
+    sns.set(style="ticks")
+    sns.set_context('poster', font_scale=1.5, rc={'lines.linewidth': 2, 'lines.markersize': 6})
+    fig, ax = plt.subplots(nrows=1, ncols=1,)
+    palette = sns.color_palette("colorblind", 11)
     Mlist = Mod.Mlist(d, i, j)
     Xlist = np.arange(i, j, 1)
     DOFSlist = np.ones(j-i)*-9999.
     
     for x in xrange(i,j):
-         DOFSlist[x-i] = SIC.DOFS(d,i,x+1,obs,Mlist)
+         DOFSlist[x-i] = SIC.DOFS(d, i, x+1, obs, Mlist)
 
-    plt.plot(Xlist,DOFSlist, label=obs)
-    plt.legend(loc='lower right')
     #plt.xlabel('Day of observation', fontsize=20)
-    plt.ylabel('DFS', fontsize=25)
+
     #plt.title('DFS varying with successive observations', fontsize=20)
+    datum = dt.datetime(int(yr), 1, 1)
+    delta = dt.timedelta(hours=24)
+    # Convert the time values to datetime objects
+    times = []
+    for t in Xlist:
+        times.append(datum + int(t) * delta)
+    ax.plot(times, DOFSlist, color=palette[0])
+
+    plt.xlabel('Date')
+    plt.ylabel('Degrees of freedom for signal')
+    myFmt = mdates.DateFormatter('%b')  # format x-axis time to display just month
+    ax.xaxis.set_major_formatter(myFmt)
+    return ax, fig
     
     
 def PlotoneDOFS(d, i, j, obs):
@@ -229,26 +254,39 @@ def PlotsuccDOFSlist(d,i,j,obs):
     
     
 def Plotwintsumm(d, i, j, obs):
-    Mlist = Mod.Mlist(d, i , j)
+    sns.set(style="ticks")
+    sns.set_context('poster', font_scale=1.5, rc={'lines.linewidth': 2, 'lines.markersize': 6})
+    fig, ax = plt.subplots(nrows=1, ncols=1,)
+    palette = sns.color_palette("colorblind", 11)
+    Mlist = Mod.Mlist(d, i, j)
     xlist = np.arange(0, j-i, 1)
-    sumsiclist = np.ones(j-i)*SIC.SIC(d, 923, 924, obs, Mlist)
+    # sumsiclist = np.ones(j-i)*SIC.SIC(d, 923, 924, obs, Mlist)
+    sumsiclist = np.ones(j-i)*SIC.SIC(d, 172, 173, obs, Mlist)
     wint = PlotsuccSIClist(d, i, j, obs)
-    plt.plot(xlist, wint, label='successive winter obs')    
-    plt.plot(xlist, sumsiclist, '--', label='single summer obs')
-    plt.xlabel('Day', fontsize=20)
-    plt.ylabel('Shannon Information Content', fontsize=20)
-    plt.title('SIC for NEE winter and summer', fontsize=20)
-    plt.legend(loc='upper left')
+    ax.plot(xlist, wint, color=palette[0],)  # label='successive winter obs')
+    ax.plot(xlist, sumsiclist, '--', color=palette[1],)  # label='single summer obs')
+    plt.xlabel('Day',)  # fontsize=20)
+    plt.ylabel('Shannon information content',)  # fontsize=20)
+    #plt.title('SIC for NEE winter and summer', fontsize=20)
+    #plt.legend(loc='upper left')
+    #plt.show()
+    return ax, fig
+
     
-    
-def PlotwintsummDOFs(d,i,j,obs):
+def PlotwintsummDOFs(d, i, j, obs):
+    sns.set(style="ticks")
+    sns.set_context('poster', font_scale=1.5, rc={'lines.linewidth': 2, 'lines.markersize': 6})
+    fig, ax = plt.subplots(nrows=1, ncols=1,)
+    palette = sns.color_palette("colorblind", 11)
     Mlist = Mod.Mlist(d, i , j)
     xlist = np.arange(0, j-i, 1)
-    sumsiclist = np.ones(j-i)*SIC.DOFS(d, 923, 924, obs, Mlist)
+    # sumsiclist = np.ones(j-i)*SIC.DOFS(d, 923, 924, obs, Mlist)
+    sumsiclist = np.ones(j-i)*SIC.DOFS(d, 172, 173, obs, Mlist)
     wint = PlotsuccDOFSlist(d, i, j, obs)
-    plt.plot(xlist, wint, label='successive winter obs')    
-    plt.plot(xlist, sumsiclist, '--', label='single summer obs')
-    plt.xlabel('Day', fontsize=20)
-    plt.ylabel('Degrees of Freedom for Signal', fontsize=20)
-    plt.title('DFS for NEE winter and summer', fontsize=20)
-    plt.legend(loc='upper left')
+    plt.plot(xlist, wint, color=palette[0])  # label='successive winter obs')
+    plt.plot(xlist, sumsiclist, '--', color=palette[1])  # label='single summer obs')
+    plt.xlabel('Day',)  # fontsize=20)
+    plt.ylabel('Degrees of Freedom for Signal',)  # fontsize=20)
+    #plt.title('DFS for NEE winter and summer', fontsize=20)
+    #plt.legend(loc='upper left')
+    return ax, fig
