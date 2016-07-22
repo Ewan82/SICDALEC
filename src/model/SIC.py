@@ -5,14 +5,15 @@ import ad
 import re
 
 
-def Mfac(Mlist,a): #Matrix factoral to find product of M matrices
-    if a==0:
-        return np.matrix(Mlist[0])
+def Mfac(Mlist, a):  # Matrix factoral to find product of M matrices
+    if a == 0:
+        ret_val = np.matrix(Mlist[0])
     else:
-        Mat=np.matrix(Mlist[0])
+        Mat = np.matrix(Mlist[0])
         for x in xrange(0,a):
-            Mat=np.matrix(Mlist[x+1])*Mat
-        return Mat
+            Mat = np.matrix(Mlist[x+1])*Mat
+        ret_val = Mat
+    return ret_val
 
 
 def H(d, i, j, obs_str):
@@ -43,7 +44,7 @@ def SIC_1ob(d, i, j, obs_str): #Calculates value of Shannon Info Content (SIC=0.
 
     R = Rmat(d, i, j, obs_str)
 
-    B = d.B #Background error covariance matrix
+    B = d.B2 #Background error covariance matrix
 
     J2nddiff = B.I + Hm.T*R.I*Hm #Calculates Hessian
 
@@ -55,7 +56,7 @@ def SIC_1ob(d, i, j, obs_str): #Calculates value of Shannon Info Content (SIC=0.
 def DOFS_1ob(d, i, j, obs):
     Hm = H(d, i, j, obs,)
     R = Rmat(d, i, j, obs)
-    B = d.B
+    B = d.B2
     A = (B.I + Hm.T*R.I*Hm).I
     DOFS = len(d.Clist[0]) - np.trace(B.I*A)
     return DOFS
@@ -91,52 +92,49 @@ def Hmat(d,i,j,obs_str,Mlist): #Creates H^hat matrix for given obs, i,j and data
     return np.matrix(Hmat)
     
     
-def Rmat(d,i,j,obs_str):
+def Rmat(d, i, j, obs_str):
 
-    stdO_dict={'nee': d.sigO_nee, 'lf': d.sigO_lf, 'lw': d.sigO_lw, \
-               'cf': d.sigO_cf, 'cr': d.sigO_cr, 'cw': d.sigO_cw, \
-               'cl': d.sigO_cl, 'cs': d.sigO_cs}
+    stdO_dict = {'nee': d.sigO_nee, 'lf': d.sigO_lf, 'lw': d.sigO_lw,
+                 'cf': d.sigO_cf, 'cr': d.sigO_cr, 'cw': d.sigO_cw,
+                 'cl': d.sigO_cl, 'cs': d.sigO_cs}
 
-    Obslist=re.findall(r'[^,;\s]+', obs_str)
+    Obslist = re.findall(r'[^,;\s]+', obs_str)
     
-    sigO=[-9999]*len(Obslist)
+    sigO = [-9999]*len(Obslist)
 
     for y in xrange(0,len(Obslist)):
-        sigO[y]=stdO_dict[Obslist[y]]
+        sigO[y] = stdO_dict[Obslist[y]]
         
-    R=np.matrix(np.identity((j-i)*len(Obslist)))
-    sigR=sigO*(j-i)
-    for x in xrange(0,(j-i)*len(sigO)):
-        R[x,x]=sigR[x]
-            
+    R = np.matrix(np.identity((j-i)*len(Obslist)))
+    sigR = sigO*(j-i)
+
+    for x in xrange(0, (j-i)*len(sigO)):
+        R[x, x] = sigR[x]
     return R
       
     
-def SIC(d,i,j,obs_str,Mlist): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A|), measure of reduction in entropy given a set of observations)
+def SIC(d, i, j, obs_str, Mlist): #Calculates value of Shannon Info Content (SIC=0.5*ln(|B|/|A|), measure of reduction in entropy given a set of observations)
     
-    H=Hmat(d,i,j,obs_str,Mlist)
-    
-    R=Rmat(d,i,j,obs_str)
-    	
-    B=d.B #Background error covariance matrix
+    H = Hmat(d, i, j, obs_str, Mlist)
+    R = Rmat(d,i,j,obs_str)
+    B = d.B2  # Background error covariance matrix
 
-    J2nddiff=B.I+H.T*R.I*H #Calculates Hessian
+    J2nddiff = B.I+H.T*R.I*H  # Calculates Hessian
 
-    SIC=0.5*np.log((np.linalg.det(J2nddiff))*(np.linalg.det(B))) #Calculates SIC
+    SIC = 0.5*np.log((np.linalg.det(J2nddiff))*(np.linalg.det(B)))  # Calculates SIC
 
     return SIC	
 
 
-def DOFS(d,i,j,obs,Mlist):
-    H=Hmat(d,i,j,obs,Mlist)
-    R=Rmat(d,i,j,obs)
-    B=d.B
-    A=(B.I+H.T*R.I*H).I
-    DOFS=len(d.Clist[0])-np.trace(B.I*A)
+def DOFS(d, i, j, obs, Mlist):
+    H = Hmat(d, i, j, obs, Mlist)
+    R = Rmat(d, i, j, obs)
+    B = d.B2
+    A = (B.I+H.T*R.I*H).I
+    DOFS = len(d.Clist[0]) - np.trace(B.I*A)
     return DOFS
 	
 	
-def Obility(d,i,j,obs):
-    H=Hmat(d,i,j,obs)
-    
+def Obility(d, i, j, obs):
+    H = Hmat(d, i, j, obs)
     return np.linalg.matrix_rank(H)

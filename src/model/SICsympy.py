@@ -7,11 +7,13 @@ import Model as M
 
 
 def info_content(sic_dfs):
-    sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo1, sigCo2, sigNEEo, cor, dGPP, T, p1, p2, p3, p4, p5, p6, p7, p8, p9 = \
-        sp.symbols("sigCfb sigCrb sigCwb sigClb sigCsb sigCo1 sigCo2 sigNEEo cor dGPP T p1 p2 p3 p4 p5 p6 p7 p8 p9")
+    sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo, sigNEEo, cor, dGPP, T, p1, p2, p3, p4, p5, p6, p7, p8, p9 = \
+        sp.symbols("sigCfb sigCrb sigCwb sigClb sigCsb sigCo sigNEEo cor dGPP T p1 p2 p3 p4 p5 p6 p7 p8 p9")
 
-    B = sp.Matrix([[sigCfb, 0, 0, 0, 0], [0, sigCrb, 0, 0, 0], [0, 0, sigCwb, 0, 0],
-                   [0, 0, 0, sigClb, 0], [0, 0, 0, 0, sigCsb]])
+    B = sp.Matrix([[sigCfb**2, 0, 0, 0, 0], [0, sigCrb**2, 0, 0, 0], [0, 0, sigCwb**2, 0, 0],
+                   [0, 0, 0, sigClb**2, 0], [0, 0, 0, 0, sigCsb**2]])
+    # B = sp.Matrix([[sigCfb, cor, cor, cor, cor], [cor, sigCrb, cor, cor, cor], [cor, cor, sigCwb, cor, cor],
+    #               [cor, cor, cor, sigClb, cor], [cor, cor, cor, cor, sigCsb]])
 
     # H0 = sp.Matrix([[1, 0, 0, 0, 0]])
     H0 = sp.Matrix([[-(1-p2)*dGPP, 0, 0, p8*T, p9*T]])
@@ -25,7 +27,9 @@ def info_content(sic_dfs):
     # R = sp.Matrix([[sigCo**2, 0, 0, 0], [0, sigCo**2, 0, 0], [0, 0, sigCo**2, 0], [0, 0, 0, sigCo**2]])
     # R = sigCo
     # R = sigNEEo
-    R = sp.Matrix([[sigCo1**2, cor], [cor, sigCo1**2]])
+    R_stdev = sp.Matrix([[sigCo, 0], [0, sigCo]])
+    cormat = sp.Matrix([[1, cor], [cor, 1]])
+    R = R_stdev*cormat*R_stdev.T
 
     H = sp.Matrix([H0, H0*M])
     # H = sp.Matrix(H0)
@@ -33,26 +37,35 @@ def info_content(sic_dfs):
     J2d = B**(-1) + H.T*(R**(-1))*H
     A = J2d**(-1)
     if sic_dfs == 'sic':
-        return sp.simplify((J2d.det())*(B.det()))
+        return (J2d.det())*(B.det())
     elif sic_dfs == 'dfs':
-        return 5.-sp.simplify(sp.trace(B**(-1)*A))
+        return 5.-sp.trace(B**(-1)*A)
 
 
-def eval_info_content(sic_dfs):
-    sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo, sigNEEo, dGPP, T, p1, p2, p3, p4, p5, p6, p7, p8, p9 = \
-        sp.symbols("sigCfb sigCrb sigCwb sigClb sigCsb sigCo sigNEEo dGPP T p1 p2 p3 p4 p5 p6 p7 p8 p9")
+def eval_info_content(sym_exp, sic_dfs='sic', corr=0.):
+    sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo, sigNEEo, cor, dGPP, T, p1, p2, p3, p4, p5, p6, p7, p8, p9 = \
+        sp.symbols("sigCfb sigCrb sigCwb sigClb sigCsb sigCo sigNEEo cor dGPP T p1 p2 p3 p4 p5 p6 p7 p8 p9")
     d = D.dalecData(365)
     dGPP_val = M.GPPdiff(d.Cf, d, 0)
-    info_con = info_content(sic_dfs)
-    symbols = [sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo, sigNEEo, dGPP, T, p1, p2, p3, p4, p5, p6, p7,
+    symbols = [sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo, sigNEEo, cor, dGPP, T, p1, p2, p3, p4, p5, p6, p7,
                p8, p9]
-    eval_vars = zip(symbols, [d.sigB_cf, d.sigB_cr, d.sigB_cw, d.sigB_cl, d.sigB_cs, d.sigO_cs, d.sigO_nee,
+    diagB = d.B2.diagonal()
+    #eval_vars = zip(symbols, [d.sigB_cf, d.sigB_cr, d.sigB_cw, d.sigB_cl, d.sigB_cs, d.sigO_cf, d.sigO_nee, corr,
+    #                          dGPP_val, d.T[0], d.p_1, d.p_2, d.p_3, d.p_4, d.p_5, d.p_6, d.p_7, d.p_8, d.p_9])
+    eval_vars = zip(symbols, [diagB[0,0], diagB[0,1], diagB[0,2], diagB[0,3], diagB[0,4], d.sigO_cf, d.sigO_nee, corr,
                               dGPP_val, d.T[0], d.p_1, d.p_2, d.p_3, d.p_4, d.p_5, d.p_6, d.p_7, d.p_8, d.p_9])
-    out = float(info_con.subs(eval_vars))
+    out = float(sym_exp.subs(eval_vars))
     if sic_dfs == 'sic':
         return 0.5*np.log(out)
     elif sic_dfs == 'dfs':
         return out
+
+
+def corr_sic(sic_dfs):
+    corrs = np.linspace(0, 0.9, 9)
+    sym_exp = info_content(sic_dfs)
+    sic_list = [eval_info_content(sym_exp, sic_dfs, cor) for cor in corrs]
+    return sic_list
 
 
 def Hmat():

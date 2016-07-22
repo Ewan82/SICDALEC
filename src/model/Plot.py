@@ -60,7 +60,35 @@ def Plot_one_SIC(d, i, j, obs, yr=2007):
     ax.xaxis.set_major_formatter(myFmt)
     # plt.title('SIC for a single observation of NEE', fontsize=20)
     # plt.show()
-    return ax, fig
+    return ax, fig, SIClist
+
+
+def Plot_one_dfs(d, i, j, obs, yr=2007):
+    sns.set(style="ticks")
+    sns.set_context('poster', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
+    fig, ax = plt.subplots(nrows=1, ncols=1,)
+    Mlist = Mod.Mlist(d, i, j)
+    Xlist = np.arange(i, j, 1)
+    dfslist = np.ones(j-i)*-9999.
+
+    for x in xrange(i, j):
+        dfslist[x-i] = SIC.DOFS(d, x, x+1, obs, Mlist)
+
+    datum = dt.datetime(int(yr), 1, 1)
+    delta = dt.timedelta(hours=24)
+    # Convert the time values to datetime objects
+    times = []
+    for t in Xlist:
+        times.append(datum + int(t) * delta)
+    ax.plot(times, dfslist)
+
+    plt.xlabel('Date')
+    plt.ylabel('Degrees of freedom for signal')
+    myFmt = mdates.DateFormatter('%b')  # format x-axis time to display just month
+    ax.xaxis.set_major_formatter(myFmt)
+    # plt.title('SIC for a single observation of NEE', fontsize=20)
+    # plt.show()
+    return ax, fig, dfslist
 
 
 def plot_temp(d, i, j, yr=2007):
@@ -68,7 +96,7 @@ def plot_temp(d, i, j, yr=2007):
     sns.set_context('poster', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
     fig, ax = plt.subplots(nrows=1, ncols=1,)
     Xlist = np.arange(i, j, 1)
-    Tlist = 2*np.array(d.T[i:j])
+    Tlist = 2*np.array(d.T_mean[i:j])
 
     datum = dt.datetime(int(yr), 1, 1)
     delta = dt.timedelta(hours=24)
@@ -80,7 +108,7 @@ def plot_temp(d, i, j, yr=2007):
     ax.plot(times, Tlist)
 
     plt.xlabel('Date')
-    plt.ylabel('Temperature term',)
+    plt.ylabel('Mean daily temperature',)
     # plt.title('Temperature term for three years of data')
     myFmt = mdates.DateFormatter('%b')  # format x-axis time to display just month
     ax.xaxis.set_major_formatter(myFmt)
@@ -261,7 +289,8 @@ def Plotwintsumm(d, i, j, obs):
     Mlist = Mod.Mlist(d, i, j)
     xlist = np.arange(0, j-i, 1)
     # sumsiclist = np.ones(j-i)*SIC.SIC(d, 923, 924, obs, Mlist)
-    sumsiclist = np.ones(j-i)*SIC.SIC(d, 172, 173, obs, Mlist)
+    # sumsiclist = np.ones(j-i)*SIC.SIC(d, 172, 173, obs, Mlist)
+    sumsiclist = np.ones(j-i)*SIC.SIC(d, 220, 221, obs, Mlist)
     wint = PlotsuccSIClist(d, i, j, obs)
     ax.plot(xlist, wint, color=palette[0],)  # label='successive winter obs')
     ax.plot(xlist, sumsiclist, '--', color=palette[1],)  # label='single summer obs')
@@ -278,10 +307,11 @@ def PlotwintsummDOFs(d, i, j, obs):
     sns.set_context('poster', font_scale=1.5, rc={'lines.linewidth': 2, 'lines.markersize': 6})
     fig, ax = plt.subplots(nrows=1, ncols=1,)
     palette = sns.color_palette("colorblind", 11)
-    Mlist = Mod.Mlist(d, i , j)
+    Mlist = Mod.Mlist(d, i, j)
     xlist = np.arange(0, j-i, 1)
     # sumsiclist = np.ones(j-i)*SIC.DOFS(d, 923, 924, obs, Mlist)
-    sumsiclist = np.ones(j-i)*SIC.DOFS(d, 172, 173, obs, Mlist)
+    # sumsiclist = np.ones(j-i)*SIC.DOFS(d, 172, 173, obs, Mlist)
+    sumsiclist = np.ones(j-i)*SIC.DOFS(d, 220, 221, obs, Mlist)
     wint = PlotsuccDOFSlist(d, i, j, obs)
     plt.plot(xlist, wint, color=palette[0])  # label='successive winter obs')
     plt.plot(xlist, sumsiclist, '--', color=palette[1])  # label='single summer obs')
