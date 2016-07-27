@@ -1,10 +1,12 @@
 import numpy as np
 import SIC as SIC
+import SICsympy as sics
 import Model as Mod
 import copy as cp
 import seaborn as sns
 import datetime as dt
 import matplotlib.dates as mdates
+import Data as D
 import matplotlib.pyplot as plt
 
 
@@ -319,4 +321,35 @@ def PlotwintsummDOFs(d, i, j, obs):
     plt.ylabel('Degrees of Freedom for Signal',)  # fontsize=20)
     #plt.title('DFS for NEE winter and summer', fontsize=20)
     #plt.legend(loc='upper left')
+    return ax, fig
+
+
+def plot_corr(sic_dfs):
+    sns.set(style="ticks")
+    sns.set_context('paper', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
+    fig, ax = plt.subplots(nrows=1, ncols=1,)
+    Xlist = np.linspace(0, 0.9, 9)
+
+    sss_lst = sics.corr_sic(sic_dfs)
+
+    ax.plot(Xlist, sss_lst)
+
+    plt.xlabel(r'Correlation $\rho$')
+    plt.ylabel('Shannon information content')
+    # plt.show()
+    return ax, fig
+
+
+def plot_corr_sic(ob, sic_dfs):
+    sns.set(style="ticks")
+    sns.set_context('paper', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
+    fig, ax = plt.subplots(nrows=1, ncols=1,)
+    d = D.dalecData(3)
+    cor_lst = np.linspace(0, 0.9, 9)
+    ic_lst = [SIC.corr_sic(d, corr, ob, sic_dfs) for corr in cor_lst]
+    ax.plot(cor_lst, ic_lst)
+
+    plt.xlabel(r'Correlation $\rho$')
+    plt.ylabel('Shannon information content')
+    # plt.show()
     return ax, fig

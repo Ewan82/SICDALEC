@@ -15,7 +15,7 @@ def info_content(sic_dfs):
     # B = sp.Matrix([[sigCfb, cor, cor, cor, cor], [cor, sigCrb, cor, cor, cor], [cor, cor, sigCwb, cor, cor],
     #               [cor, cor, cor, sigClb, cor], [cor, cor, cor, cor, sigCsb]])
 
-    # H0 = sp.Matrix([[1, 0, 0, 0, 0]])
+    # H0 = sp.Matrix([[1, 0, 0, 1, 1]])
     H0 = sp.Matrix([[-(1-p2)*dGPP, 0, 0, p8*T, p9*T]])
     # H0 = sp.Matrix([[-(1-p2)*dGPP, 0, 0, p8*T, p9*T],
     #               [1., 0, 0, 0, 0]])
@@ -29,24 +29,28 @@ def info_content(sic_dfs):
     # R = sigNEEo
     R_stdev = sp.Matrix([[sigCo, 0], [0, sigCo]])
     cormat = sp.Matrix([[1, cor], [cor, 1]])
+    # cormat = sp.Matrix([[1, 0], [0, 1]])
     R = R_stdev*cormat*R_stdev.T
 
     H = sp.Matrix([H0, H0*M])
     # H = sp.Matrix(H0)
 
     J2d = B**(-1) + H.T*(R**(-1))*H
-    A = J2d**(-1)
+    # A = J2d**(-1)
+    # K = A*H.T*(R**(-1))
     if sic_dfs == 'sic':
-        return (J2d.det())*(B.det())
+        return J2d.det()*B.det()  # , R, sp.simplify(K.T*H.T)
     elif sic_dfs == 'dfs':
-        return 5.-sp.trace(B**(-1)*A)
+        A = J2d**(-1)
+        return 5. - sp.trace(B**(-1)*A)
 
 
 def eval_info_content(sym_exp, sic_dfs='sic', corr=0.):
     sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo, sigNEEo, cor, dGPP, T, p1, p2, p3, p4, p5, p6, p7, p8, p9 = \
         sp.symbols("sigCfb sigCrb sigCwb sigClb sigCsb sigCo sigNEEo cor dGPP T p1 p2 p3 p4 p5 p6 p7 p8 p9")
     d = D.dalecData(365)
-    dGPP_val = M.GPPdiff(d.Cf, d, 0)
+    #dGPP_val = M.GPPdiff(d.Cf, d, 0)
+    dGPP_val = M.GPPdiff(200, d, 30)
     symbols = [sigCfb, sigCrb, sigCwb, sigClb, sigCsb, sigCo, sigNEEo, cor, dGPP, T, p1, p2, p3, p4, p5, p6, p7,
                p8, p9]
     diagB = d.B2.diagonal()
@@ -237,3 +241,31 @@ def fiveinv():
                      [a51, 0, 0, a54, a55]])
 
     return d2J
+
+
+def corr_eff():
+    xb, x0, y0, y1, sigyo0, sigyo1, cor, sigxb, a = sp.symbols("xb x0 y0 y1 sigyo0 sigyo1 cor sigxb, a")
+
+    B = sp.Matrix([[sigxb**2]])
+
+    H0 = sp.Matrix([[1]])
+
+    M = sp.Matrix([[a]])
+
+    R_stdev = sp.Matrix([[sigyo0, 0], [0, sigyo0]])
+    cormat = sp.Matrix([[1, cor], [cor, 1]])
+    # cormat = sp.Matrix([[1, 0], [0, 1]])
+    R = R_stdev*cormat*R_stdev.T
+
+    H = sp.Matrix([H0, H0*M])
+
+    yhat = sp.Matrix([[y0, y1]]).T
+
+    Hx0 = H*x0
+
+    J = sp.simplify((yhat-Hx0).T*R**(-1)*(yhat-Hx0))
+    J2d = B**(-1) + H.T*(R**(-1))*H
+    A = J2d**(-1)
+    K = A*H.T*(R**(-1))
+    S = sp.simplify(K*H)
+    return sp.simplify(J2d.det())*(B.det())  # sp.simplify(K)

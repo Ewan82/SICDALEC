@@ -1,6 +1,7 @@
 #This will have code in
 import numpy as np
 import Model as Mod
+import Data as D
 import ad
 import re
 
@@ -123,7 +124,41 @@ def SIC(d, i, j, obs_str, Mlist): #Calculates value of Shannon Info Content (SIC
 
     SIC = 0.5*np.log((np.linalg.det(J2nddiff))*(np.linalg.det(B)))  # Calculates SIC
 
-    return SIC	
+    return SIC
+
+
+def PlotsuccSIClist(d,i,j,obs):
+    Mlist = Mod.Mlist(d, i, j)
+    SIClist = np.ones(j-i)*-9999.
+
+    for x in xrange(i,j):
+         SIClist[x-i] = SIC.SIC(d, i, x+1, obs, Mlist)
+    return SIClist
+
+
+def r_matrix_size2(corr):
+    """
+    Creates an err cov mat of size 2 for NEE with time correlation.
+    :param corr: time corr between 0 and 1.
+    :return: r mat
+    """
+    r_std = np.sqrt(0.5)*np.eye(2)
+    c_mat = np.array([[1., corr], [corr, 1.]])
+    return np.dot(r_std, np.dot(c_mat, r_std))
+
+
+def corr_sic(d, corr, ob, sic_dfs):
+    Mlist = Mod.Mlist(d, 0, 2)
+    H = Hmat(d, 0, 2, ob, Mlist)
+    R = r_matrix_size2(corr)
+    B = d.B2
+    J2nddiff = np.linalg.inv(B)+H.T*np.linalg.inv(R)*H  # Calculates Hessian
+    if sic_dfs == 'sic':
+        ret_val = 0.5*np.log((np.linalg.det(J2nddiff))*(np.linalg.det(B)))  # Calculates SIC
+    elif sic_dfs == 'dfs':
+        A = J2nddiff**(-1)
+        ret_val = 5. - np.trace(B**(-1)*A)
+    return ret_val
 
 
 def DOFS(d, i, j, obs, Mlist):

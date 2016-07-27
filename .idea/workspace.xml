@@ -31,7 +31,7 @@
         <entry file="file://$PROJECT_DIR$/src/model/Model.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
+              <caret line="127" column="20" selection-start-line="127" selection-start-column="20" selection-end-line="127" selection-end-column="20" />
               <folding>
                 <element signature="e#31#49#0" expanded="true" />
               </folding>
@@ -43,7 +43,7 @@
         <entry file="file://$PROJECT_DIR$/src/model/SIC.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="7" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="7" />
+              <caret line="160" column="18" selection-start-line="160" selection-start-column="18" selection-end-line="160" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -53,7 +53,7 @@
         <entry file="file://$PROJECT_DIR$/src/model/Plot.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="150" column="19" selection-start-line="150" selection-start-column="19" selection-end-line="150" selection-end-column="19" />
+              <caret line="348" column="47" selection-start-line="348" selection-start-column="47" selection-end-line="348" selection-end-column="47" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -76,8 +76,8 @@
       <file leaf-file-name="SICsympy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/model/SICsympy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.40992907">
-              <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.79574466">
+              <caret line="44" column="39" selection-start-line="44" selection-start-column="39" selection-end-line="44" selection-end-column="39" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -99,7 +99,7 @@
         <entry file="file://$PROJECT_DIR$/src/model/Data.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="39" column="15" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
+              <caret line="51" column="31" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -122,10 +122,10 @@
       <list>
         <option value="$PROJECT_DIR$/src/model/obility.py" />
         <option value="$PROJECT_DIR$/src/model/Model.py" />
-        <option value="$PROJECT_DIR$/src/model/Data.py" />
-        <option value="$PROJECT_DIR$/src/model/SIC.py" />
-        <option value="$PROJECT_DIR$/src/model/Plot.py" />
         <option value="$PROJECT_DIR$/src/test/test_model.py" />
+        <option value="$PROJECT_DIR$/src/model/Plot.py" />
+        <option value="$PROJECT_DIR$/src/model/SIC.py" />
+        <option value="$PROJECT_DIR$/src/model/Data.py" />
         <option value="$PROJECT_DIR$/src/model/SICsympy.py" />
       </list>
     </option>
@@ -163,7 +163,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -234,6 +233,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -386,7 +386,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="797" extended-state="6" />
+    <frame x="0" y="23" width="1440" height="797" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16842847" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -843,7 +843,7 @@
     <entry file="file://$PROJECT_DIR$/src/model/Model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
+          <caret line="127" column="20" selection-start-line="127" selection-start-column="20" selection-end-line="127" selection-end-column="20" />
           <folding>
             <element signature="e#31#49#0" expanded="true" />
           </folding>
@@ -863,7 +863,7 @@
     <entry file="file://$PROJECT_DIR$/src/model/SIC.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="7" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="7" />
+          <caret line="160" column="18" selection-start-line="160" selection-start-column="18" selection-end-line="160" selection-end-column="18" />
           <folding />
         </state>
       </provider>
@@ -876,20 +876,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/Data.py">
+    <entry file="file://$PROJECT_DIR$/src/model/Plot.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="39" column="15" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
+          <caret line="348" column="47" selection-start-line="348" selection-start-column="47" selection-end-line="348" selection-end-column="47" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/Plot.py">
+    <entry file="file://$PROJECT_DIR$/src/model/Data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="150" column="19" selection-start-line="150" selection-start-column="19" selection-end-line="150" selection-end-column="19" />
+          <caret line="51" column="31" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -898,8 +898,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/SICsympy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.40992907">
-          <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.79574466">
+          <caret line="44" column="39" selection-start-line="44" selection-start-column="39" selection-end-line="44" selection-end-column="39" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

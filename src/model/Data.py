@@ -49,17 +49,17 @@ class dalecData( ):
                         0.00000000e+00,   1.17380833e+06]])
 
         
-        #'Observartion variances for carbon pools and NEE' 
-        self.sigO_cf = (self.Cf*0.1)**2  # 10%
-        self.sigO_cw = (self.Cw*0.1)**2  # 10%
-        self.sigO_cr = (self.Cr*0.3)**2  # 30%
-        self.sigO_cl = (self.Cl*0.3)**2  # 30%
-        self.sigO_cs = (self.Cs*0.3)**2  # 30%
+        #'Observartion std devs for carbon pools and NEE'
+        self.sigO_cf = (self.Cf*0.1)  # 10%
+        self.sigO_cw = (self.Cw*0.1)  # 10%
+        self.sigO_cr = (self.Cr*0.3)  # 30%
+        self.sigO_cl = (self.Cl*0.3)  # 30%
+        self.sigO_cs = (self.Cs*0.3)  # 30%
         self.sigO_nee = 0.5  # (gCm-2day-1)**2
-        self.sigO_lf = 0.2**2
-        self.sigO_lw = 0.2**2
-        self.sigO_lai = 0.5**2
-        self.sigO_g_resp = 0.5**2
+        self.sigO_lf = 0.2
+        self.sigO_lw = 0.2
+        self.sigO_lai = 0.5
+        self.sigO_g_resp = 0.5
         
         #'Daily temperatures degC'
         self.T_mean = self.data[:,1].tolist()*k
