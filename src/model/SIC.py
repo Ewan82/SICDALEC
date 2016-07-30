@@ -136,21 +136,21 @@ def PlotsuccSIClist(d,i,j,obs):
     return SIClist
 
 
-def r_matrix_size2(corr):
+def r_matrix_sizen(corr, n=2):
     """
     Creates an err cov mat of size 2 for NEE with time correlation.
     :param corr: time corr between 0 and 1.
     :return: r mat
     """
-    r_std = np.sqrt(0.5)*np.eye(2)
-    c_mat = np.array([[1., corr], [corr, 1.]])
+    r_std = np.sqrt(0.5)*np.eye(n)
+    c_mat = np.diag([corr]*(n-1), -1) + np.diag([1.]*n, 0) + np.diag([corr]*(n-1), 1)
     return np.dot(r_std, np.dot(c_mat, r_std))
 
 
-def corr_sic(d, corr, ob, sic_dfs):
-    Mlist = Mod.Mlist(d, 0, 2)
-    H = Hmat(d, 0, 2, ob, Mlist)
-    R = r_matrix_size2(corr)
+def corr_sic(d, corr, ob, sic_dfs, n=2):
+    Mlist = Mod.Mlist(d, 0, n)
+    H = Hmat(d, 0, n, ob, Mlist)
+    R = r_matrix_sizen(corr, n)
     B = d.B2
     J2nddiff = np.linalg.inv(B)+H.T*np.linalg.inv(R)*H  # Calculates Hessian
     if sic_dfs == 'sic':

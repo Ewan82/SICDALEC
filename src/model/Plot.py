@@ -335,21 +335,21 @@ def plot_corr(sic_dfs):
     ax.plot(Xlist, sss_lst)
 
     plt.xlabel(r'Correlation $\rho$')
-    plt.ylabel('Shannon information content')
+    plt.ylabel(sic_dfs)
     # plt.show()
     return ax, fig
 
 
-def plot_corr_sic(ob, sic_dfs):
+def plot_corr_sic(ob, sic_dfs, n=2):
     sns.set(style="ticks")
     sns.set_context('paper', font_scale=1.5, rc={'lines.linewidth': 1, 'lines.markersize': 6})
     fig, ax = plt.subplots(nrows=1, ncols=1,)
-    d = D.dalecData(3)
+    d = D.dalecData(n)
     cor_lst = np.linspace(0, 0.9, 9)
-    ic_lst = [SIC.corr_sic(d, corr, ob, sic_dfs) for corr in cor_lst]
+    ic_lst = [SIC.corr_sic(d, corr, ob, sic_dfs, n) for corr in cor_lst]
     ax.plot(cor_lst, ic_lst)
 
     plt.xlabel(r'Correlation $\rho$')
-    plt.ylabel('Shannon information content')
+    plt.ylabel(sic_dfs)
     # plt.show()
     return ax, fig
