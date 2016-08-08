@@ -27,12 +27,12 @@ def info_content(sic_dfs):
     # R = sp.Matrix([[sigCo**2, 0, 0, 0], [0, sigCo**2, 0, 0], [0, 0, sigCo**2, 0], [0, 0, 0, sigCo**2]])
     # R = sigCo
     # R = sigNEEo
-    R_stdev = sp.Matrix([[sigCo, 0], [0, sigCo]])
-    cormat = sp.Matrix([[1, cor], [cor, 1]])
+    R_stdev = sp.Matrix([[sigCo, 0, 0], [0, sigCo, 0], [0, 0, sigCo]])
+    cormat = sp.Matrix([[1., cor, 0], [cor, 1., 0], [0, 0, 1.]])
     # cormat = sp.Matrix([[1, 0], [0, 1]])
     R = R_stdev*cormat*R_stdev.T
 
-    H = sp.Matrix([H0, H0*M])
+    H = sp.Matrix([H0, H0*M, H0*M**3])
     # H = sp.Matrix(H0)
 
     # J2d = B**(-1) + H.T*(R**(-1))*H
